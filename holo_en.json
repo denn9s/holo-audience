@@ -1,0 +1,75 @@
+{
+    "group_name": "holo_en",
+    "generation": [
+        {
+            "id": "holo_myth",
+            "members": [
+                {
+                    "name": "gawr_gura",
+                    "id": "UCoSrY_IQQVpmIRZ9Xf-y93g",
+                    "upload_id": "UUoSrY_IQQVpmIRZ9Xf-y93g"
+                },
+                {
+                    "name": "ninomae_inanis",
+                    "id": "UCMwGHR0BTZuLsmjY_NT5Pwg",
+                    "upload_id": "UUMwGHR0BTZuLsmjY_NT5Pwg"
+                },
+                {
+                    "name": "watson_amelia",
+                    "id": "UCyl1z3jo3XHR1riLFKG5UAg",
+                    "upload_id": "UUyl1z3jo3XHR1riLFKG5UAg"
+                },
+                {
+                    "name": "mori_calliope",
+                    "id": "UCL_qhgtOy0dy1Agp8vkySQg",
+                    "upload_id": "UUL_qhgtOy0dy1Agp8vkySQg"
+                },
+                {
+                    "name": "takanashi_kiara",
+                    "id": "UCHsx4Hqa-1ORjQTh9TYDhww",
+                    "upload_id": "UUHsx4Hqa-1ORjQTh9TYDhww"
+                }
+            ]
+        },
+        {
+            "id": "project_hope",
+            "members": [
+                {
+                    "name": "irys",
+                    "id": "",
+                    "upload_id": ""
+                }
+            ]
+        },
+        {
+            "id": "holo_council",
+            "members" : [
+                {
+                    "name": "tsukumo_sana",
+                    "id": "",
+                    "upload_id": ""
+                },
+                {
+                    "name": "ceres_fauna",
+                    "id": "",
+                    "upload_id": ""
+                },
+                {
+                    "name": "ouro_kronii",
+                    "id": "",
+                    "upload_id": ""
+                },
+                {
+                    "name": "nanashi_mumei",
+                    "id": "",
+                    "upload_id": ""
+                },
+                {
+                    "name": "hako_baelz",
+                    "id": "",
+                    "upload_id": ""
+                }
+            ]
+        }
+    ]
+}
