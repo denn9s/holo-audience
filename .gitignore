@@ -233,3 +233,9 @@ dmypy.json
 cython_debug/
 
 ### end python ignore
+
+### start specific file ignore
+
+client_secret.json
+
+### end specific file ignore
