@@ -11,7 +11,6 @@ def main():
         chatter_data['success'] = 1
         chatter_list = set()
         for message in chat:
-            chat.print_formatted(message)
             chatter_list.add(message['author']['id'])
         chatter_data['unique_chatter_count'] = len(chatter_list)
         chatter_data['chatter_list'] += chatter_list
