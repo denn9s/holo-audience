@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "holo-audience",
   "main": "test.js",
-  "type": "module",
   "dependencies": {
+    "express": "^4.17.1",
     "googleapis": "^85.0.0",
     "python-shell": "^3.0.0"
   },
