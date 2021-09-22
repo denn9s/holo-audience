@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Stream = new mongoose.Schema({
     id: { type: String, required: true },
-    member: { type: String, required: true},
+    member_id: { type: String, required: true},
     title: { type: String, required: true },
     thumnbnail_url: { type: String, required: true },
     times: {
