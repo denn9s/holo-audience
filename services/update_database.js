@@ -10,18 +10,24 @@ mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useU
         console.log("Connection successful!");
     })
     .catch(err => {
-        console.log("Error! Connection unsuccessful!")
-        console.log(err)
+        console.log("Error! Connection unsuccessful!");
+        console.log(err);
     });
 
 async function get_all_streams(member_id) {
+    let stream_id_list = [];
     let member = await Member.findOne({id: member_id});
-    yt_id = member.youtube_id;
-    let python_shell_options = {args: [yt_id], pythonOptions: ['-u']};
-    PythonShell.run('get_stream_list.py', python_shell_options, function (err, res) {
-        if (err) throw err;
-        const stream_id_array = res;
-    });
+    return new Promise (async (resolve, reject) => {
+        yt_id = member.youtube_id;
+        let pyshell = new PythonShell('get_stream_list.py', {mode: 'text', args: [yt_id]});
+        pyshell.on('message', function (id) {
+            stream_id_list.push(id);
+        });
+        pyshell.end(function (err) {
+            if (err) reject(err);
+            resolve(stream_id_list);
+        });
+    })
 }
 
 async function get_all_members() {
@@ -31,8 +37,4 @@ async function get_all_members() {
         member_id_array.push(mem.id);
     }
     return member_id_array;
-}
-
-function update_stream_databse(member_id, stream_id_array) {
-
 }
