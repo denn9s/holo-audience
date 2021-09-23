@@ -4,6 +4,8 @@ const {PythonShell} = require('python-shell');
 const Member = require('../models/member');
 const Stream = require('../models/stream');
 
+const {getStreamDetails} = require('../stream_data');
+
 mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("Connection successful!");
@@ -61,4 +63,24 @@ async function getNewStreams(member_id) {
         }
     }
     return new_stream_id_list;
+}
+
+/**
+ * Adds new YouTube streams to database
+ * @param {String} member_id - member's ID, in snake-case
+ */
+async function addNewStreams(member_id) {
+    const new_stream_array = await getNewStreams(member_id);
+    for (let stream_id of new_stream_array) {
+        const stream_details = await getStreamDetails(stream_id);
+        const stream = new Stream({id: stream_id, member_id: member_id,
+                                title: stream_details.stream_title,
+                                thumbnail_url: stream_details.thumbnail_url,
+                                times: {
+                                    actual_start_time: stream_details.stream_time_data.actual_start_time,
+                                    actual_end_time: stream_details.stream_time_data.actual_end_time,
+                                    scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
+                                }})
+        stream.save();
+    }
 }
