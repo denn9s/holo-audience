@@ -28,7 +28,11 @@ async function getStreamDetails(input_id) {
         var stream_time_data = res.data.items[0].liveStreamingDetails;
         var data = {"stream_title": stream_title,
                     "thumnbnail_url": thumbnail_url,
-                    "stream_time_data": stream_time_data};
+                    "stream_time_data": {
+                        "actual_start_time": stream_time_data.actualStartTime,
+                        "actual_end_time": stream_time_data.actualEndTime,
+                        "scheduled_start_time": stream_time_data.scheduledStartTime
+                    }};
         return data;
     } catch (err) {
         console.log(err);
