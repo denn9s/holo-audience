@@ -4,6 +4,11 @@ const { default: axios } = require('axios');
 const BASE_URL = 'https://www.googleapis.com/youtube/v3/videos';
 const DEFAULT_PARTS = ['liveStreamingDetails', 'snippet']
 
+/**
+ * Gets necessary details of inputted stream (title, thumbnail, times)
+ * @param {String} input_id - ID of YouTube stream
+ * @returns Object containing details of stream
+ */
 async function getStreamDetails(input_id) {
     var params = new URLSearchParams();
     for (var part of DEFAULT_PARTS) {
@@ -30,6 +35,10 @@ async function getStreamDetails(input_id) {
     }
 }
 
+/**
+ * Retrieves API key from local JSON file
+ * @returns String of API key
+ */
 function getAPIKey() {
     let data = fs.readFileSync('client_secret.json');
     let secret = JSON.parse(data)

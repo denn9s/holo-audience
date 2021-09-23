@@ -13,6 +13,24 @@ mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useU
         console.log(err);
     });
 
+/**
+ * Gets all member IDs in database
+ * @returns array of member IDs
+ */
+ async function get_all_members() {
+    const member_array = await Member.find();
+    member_id_array = [];
+    for (let mem of member_array) {
+        member_id_array.push(mem.id);
+    }
+    return member_id_array;
+}
+
+/**
+ * Gets current YouTube streams
+ * @param {String} member_id - member's ID, in snake-case
+ * @returns array of YouTube stream IDs
+ */
 async function get_all_streams(member_id) {
     let stream_id_list = [];
     let member = await Member.findOne({id: member_id});
@@ -29,15 +47,11 @@ async function get_all_streams(member_id) {
     })
 }
 
-async function get_all_members() {
-    const member_array = await Member.find();
-    member_id_array = [];
-    for (let mem of member_array) {
-        member_id_array.push(mem.id);
-    }
-    return member_id_array;
-}
-
+/**
+ * Compares current YouTube streams to streams stored in database
+ * @param {String} member_id - member's ID, in snake-case
+ * @returns array of new stream IDs
+ */
 async function get_new_streams(member_id) {
     let current_stream_id_list = await get_all_streams(member_id);
     let new_stream_id_list = [];
