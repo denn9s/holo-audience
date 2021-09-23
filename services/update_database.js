@@ -17,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useU
  * Gets all member IDs in database
  * @returns array of member IDs
  */
- async function get_all_members() {
+ async function getAllMembers() {
     const member_array = await Member.find();
     member_id_array = [];
     for (let mem of member_array) {
@@ -31,7 +31,7 @@ mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useU
  * @param {String} member_id - member's ID, in snake-case
  * @returns array of YouTube stream IDs
  */
-async function get_all_streams(member_id) {
+async function getAllStreams(member_id) {
     let stream_id_list = [];
     let member = await Member.findOne({id: member_id});
     return new Promise (async (resolve, reject) => {
@@ -52,8 +52,8 @@ async function get_all_streams(member_id) {
  * @param {String} member_id - member's ID, in snake-case
  * @returns array of new stream IDs
  */
-async function get_new_streams(member_id) {
-    let current_stream_id_list = await get_all_streams(member_id);
+async function getNewStreams(member_id) {
+    let current_stream_id_list = await getAllStreams(member_id);
     let new_stream_id_list = [];
     for (let stream_id of current_stream_id_list) {
         if ((await Stream.exists({id: stream_id})) === false) {
