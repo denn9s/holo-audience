@@ -102,3 +102,16 @@ async function getChatData(stream_id) {
         });
     })
 }
+
+async function addChatData(stream_id, member_id) {
+    let stream_data = await getChatData(stream_id);
+    console.log(stream_data);
+    if (stream_data.success === 1) {
+        let chat = new Chat({stream_id: stream_id, member_id: member_id, 
+            unique_chatter_count: stream_data.unique_chatter_count,
+            chatters: stream_data.chatter_list});
+        chat.save();
+    } else {
+        console.log('Error!');
+    }
+}
