@@ -4,6 +4,7 @@ const {PythonShell} = require('python-shell');
 const Member = require('../models/member');
 const Stream = require('../models/stream');
 const Chat = require('../models/chat');
+const MemberUpdate = require('../models/update');
 
 const {getStreamDetails} = require('../stream_data');
 
@@ -67,7 +68,7 @@ async function getNewStreams(member_id) {
 }
 
 /**
- * Adds new YouTube streams to database
+ * Adds new YouTube streams to Streams and Updates databases
  * @param {String} member_id - member's ID, in snake-case
  */
 async function addNewStreams(member_id) {
@@ -81,8 +82,15 @@ async function addNewStreams(member_id) {
                                     actual_start_time: stream_details.stream_time_data.actual_start_time,
                                     actual_end_time: stream_details.stream_time_data.actual_end_time,
                                     scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
-                                }})
+                                }});
         await stream.save();
+        const filter = {member_id: member_id};
+        var stream_count = await Stream.countDocuments(filter);
+        const update = {total_videos: stream_count,
+                        last_added_video_id: stream_id, 
+                        last_added_video_date: stream_details.stream_time_data.actual_start_time};
+        const member_update = await MemberUpdate.findOneAndUpdate(filter, update);
+        await member_update.save();
     }
 }
 
