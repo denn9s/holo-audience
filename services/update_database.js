@@ -86,6 +86,11 @@ async function addNewStreams(member_id) {
     }
 }
 
+/**
+ * Gets chat data
+ * @param {String} stream_id - YouTube video ID
+ * @returns Object that contains necessary data
+ */
 async function getChatData(stream_id) {
     const base_url = 'https://www.youtube.com/watch?v='
     const stream_url = base_url + stream_id;
@@ -103,6 +108,11 @@ async function getChatData(stream_id) {
     })
 }
 
+/**
+ * Adds chat data to database
+ * @param {String} stream_id - YouTube video ID
+ * @param {String} member_id - member's ID, in snake-case 
+ */
 async function addChatData(stream_id, member_id) {
     let stream_data = await getChatData(stream_id);
     console.log(stream_data);
