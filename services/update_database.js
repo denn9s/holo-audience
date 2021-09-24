@@ -3,6 +3,7 @@ const {PythonShell} = require('python-shell');
 
 const Member = require('../models/member');
 const Stream = require('../models/stream');
+const Chat = require('../models/chat');
 
 const {getStreamDetails} = require('../stream_data');
 
@@ -83,4 +84,21 @@ async function addNewStreams(member_id) {
                                 }})
         stream.save();
     }
+}
+
+async function getChatData(stream_id) {
+    const base_url = 'https://www.youtube.com/watch?v='
+    const stream_url = base_url + stream_id;
+    let options = { mode: 'json', args: [stream_url], pythonOptions: ['-u'] };
+    let chat_object = {}
+    return new Promise (async (resolve, reject) => {
+        let pyshell = new PythonShell('get_viewers.py', options);
+        pyshell.on('message', function (id) {
+            chat_object = id;
+        });
+        pyshell.end(function (err) {
+            if (err) reject(err);
+            resolve(chat_object);
+        });
+    })
 }
