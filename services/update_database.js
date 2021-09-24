@@ -68,7 +68,29 @@ async function getNewStreams(member_id) {
 }
 
 /**
- * Adds new YouTube streams to Streams and Updates databases
+ * Gets chat data
+ * @param {String} stream_id - YouTube video ID
+ * @returns Object that contains necessary data
+ */
+ async function getChatData(stream_id) {
+    const base_url = 'https://www.youtube.com/watch?v='
+    const stream_url = base_url + stream_id;
+    let options = { mode: 'json', args: [stream_url], pythonOptions: ['-u'] };
+    let chat_object = {}
+    return new Promise (async (resolve, reject) => {
+        let pyshell = new PythonShell('get_viewers.py', options);
+        pyshell.on('message', function (id) {
+            chat_object = id;
+        });
+        pyshell.end(function (err) {
+            if (err) reject(err);
+            resolve(chat_object);
+        });
+    })
+}
+
+/**
+ * Adds new YouTube streams to database
  * @param {String} member_id - member's ID, in snake-case
  */
 async function addNewStreams(member_id) {
@@ -84,36 +106,7 @@ async function addNewStreams(member_id) {
                                     scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
                                 }});
         await stream.save();
-        const filter = {member_id: member_id};
-        var stream_count = await Stream.countDocuments(filter);
-        const update = {total_videos: stream_count,
-                        last_added_video_id: stream_id, 
-                        last_added_video_date: stream_details.stream_time_data.actual_start_time};
-        const member_update = await MemberUpdate.findOneAndUpdate(filter, update);
-        await member_update.save();
     }
-}
-
-/**
- * Gets chat data
- * @param {String} stream_id - YouTube video ID
- * @returns Object that contains necessary data
- */
-async function getChatData(stream_id) {
-    const base_url = 'https://www.youtube.com/watch?v='
-    const stream_url = base_url + stream_id;
-    let options = { mode: 'json', args: [stream_url], pythonOptions: ['-u'] };
-    let chat_object = {}
-    return new Promise (async (resolve, reject) => {
-        let pyshell = new PythonShell('get_viewers.py', options);
-        pyshell.on('message', function (id) {
-            chat_object = id;
-        });
-        pyshell.end(function (err) {
-            if (err) reject(err);
-            resolve(chat_object);
-        });
-    })
 }
 
 /**
@@ -132,4 +125,19 @@ async function addChatData(stream_id, member_id) {
     } else {
         console.log('Error!');
     }
+}
+
+/**
+ * Adds most recent update data to database
+ * @param {String} member_id - member's ID, in snake-case 
+ * @param {String} stream_id - YouTube video ID
+ * @param {String} stream_date - actual start date/time
+ */
+async function addMemberUpdate(member_id, stream_id, stream_date) {
+    var stream_count = await Stream.countDocuments({member_id: member_id});
+    const update = {total_videos: stream_count,
+                    last_added_video_id: stream_id, 
+                    last_added_video_date: stream_date};
+    const member_update = await MemberUpdate.findOneAndUpdate({member_id: member_id}, update);
+    await member_update.save();
 }
