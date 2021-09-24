@@ -105,7 +105,11 @@ async function addNewStreams(member_id) {
                                     actual_end_time: stream_details.stream_time_data.actual_end_time,
                                     scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
                                 }});
-        await stream.save();
+        await stream.save(function (err, res) {
+            if (err) return console.log(err);
+            console.log(`Added to Stream DB - ID: ${res.id} for Member: ${member_id}!`);
+            addMemberUpdate(member_id, stream_id, stream_details.stream_time_data.actual_start_time);
+        });
     }
 }
 
@@ -139,5 +143,8 @@ async function addMemberUpdate(member_id, stream_id, stream_date) {
                     last_added_video_id: stream_id, 
                     last_added_video_date: stream_date};
     const member_update = await MemberUpdate.findOneAndUpdate({member_id: member_id}, update);
-    await member_update.save();
+    await member_update.save(function (err, res) {
+        if (err) return console.log(err);
+        console.log(`Added to MemberUpdate DB - ID:${stream_id} for Member: ${member_id} on Date: ${stream_date}!`);
+    });
 }
