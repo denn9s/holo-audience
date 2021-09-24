@@ -7,4 +7,4 @@ const Chat = new mongoose.Schema({
     chatters: { type: [String], required: true }
 });
 
-module.exports.mongoose.model("Chat", Chat);
+module.exports = mongoose.model("Chat", Chat);
