@@ -82,7 +82,7 @@ async function addNewStreams(member_id) {
                                     actual_end_time: stream_details.stream_time_data.actual_end_time,
                                     scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
                                 }})
-        stream.save();
+        await stream.save();
     }
 }
 
@@ -120,7 +120,7 @@ async function addChatData(stream_id, member_id) {
         let chat = new Chat({stream_id: stream_id, member_id: member_id, 
             unique_chatter_count: stream_data.unique_chatter_count,
             chatters: stream_data.chatter_list});
-        chat.save();
+        await chat.save();
     } else {
         console.log('Error!');
     }
