@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Chat = new mongoose.Schema({
-    stream_id: { type: String, required: true },
+    stream_id: { type: String, required: true, unique: true },
     member_id: { type: String, required: true },
     unique_chatter_count: { type: Number, required: true },
     chatters: { type: [String], required: true }
