@@ -77,10 +77,11 @@ async function getNewStreams(member_id) {
     const stream_url = base_url + stream_id;
     let options = { mode: 'json', args: [stream_url], pythonOptions: ['-u'] };
     let chat_object = {}
+    console.log(`Attempting to get chat for ID: ${stream_id}...`)
     return new Promise (async (resolve, reject) => {
         let pyshell = new PythonShell('get_viewers.py', options);
-        pyshell.on('message', function (id) {
-            chat_object = id;
+        pyshell.on('message', function (res) {
+            chat_object = res;
         });
         pyshell.end(function (err) {
             if (err) reject(err);
@@ -90,47 +91,63 @@ async function getNewStreams(member_id) {
 }
 
 /**
- * Adds new YouTube streams to database
+ * Adds new streams and chat to relevant databases for a single member
  * @param {String} member_id - member's ID, in snake-case
  */
-async function addNewStreams(member_id) {
+async function updateMemberStreamsAndChat(member_id) {
     const new_stream_array = await getNewStreams(member_id);
     for (let stream_id of new_stream_array) {
         const stream_details = await getStreamDetails(stream_id);
-        const stream = new Stream({id: stream_id, member_id: member_id,
-                                title: stream_details.stream_title,
-                                thumbnail_url: stream_details.thumbnail_url,
-                                times: {
-                                    actual_start_time: stream_details.stream_time_data.actual_start_time,
-                                    actual_end_time: stream_details.stream_time_data.actual_end_time,
-                                    scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
-                                }});
-        await stream.save(function (err, res) {
-            if (err) return console.log(err);
-            console.log(`Added to Stream DB - ID: ${res.id} for Member: ${res.member_id}`);
-            addMemberUpdate(member_id, stream_id, stream_details.stream_time_data.actual_start_time);
-        });
+        if (await addChatData(stream_id, member_id) === true) {
+            await addNewStreams(member_id, stream_id, stream_details);
+        } else {
+            console.log("ERROR! Live chat was not available!");
+        }
     }
+}
+
+/**
+ * Adds new streams to database and updates member update database
+ * @param {String} member_id - member's ID, in snake-case
+ * @param {String} stream_id - YouTube video ID
+ * @param {Object} stream_details - details of stream (i.e. stream ID, thumbnails)
+ */
+async function addNewStreams(member_id, stream_id, stream_details) {
+    const stream = new Stream({id: stream_id, member_id: member_id,
+        title: stream_details.stream_title,
+        thumbnail_url: stream_details.thumbnail_url,
+        times: {
+            actual_start_time: stream_details.stream_time_data.actual_start_time,
+            actual_end_time: stream_details.stream_time_data.actual_end_time,
+            scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
+        }});
+    await stream.save(function (err, res) {
+        if (err) return console.log(err);
+        console.log(`Added to Stream DB - ID: ${res.id} for Member: ${res.member_id}`);
+        addMemberUpdate(member_id, stream_id, stream_details.stream_time_data.actual_start_time);
+    });
 }
 
 /**
  * Adds chat data to database
  * @param {String} stream_id - YouTube video ID
- * @param {String} member_id - member's ID, in snake-case 
+ * @param {String} member_id - member's ID, in snake-case
+ * @returns Boolean indicating success or failure
  */
 async function addChatData(stream_id, member_id) {
     let stream_data = await getChatData(stream_id);
-    console.log(stream_data);
     if (stream_data.success === 1) {
         let chat = new Chat({stream_id: stream_id, member_id: member_id, 
             unique_chatter_count: stream_data.unique_chatter_count,
             chatters: stream_data.chatter_list});
         await chat.save(function (err, res) {
             if (err) return console.log(err);
-            console.log(`Added to Chat DB - Stream ID: ${res.stream_id} for Member: ${res.member_id}`);
+            console.log(`Added to Chat DB - ID: ${res.stream_id} for Member: ${res.member_id}`);
         })
+        return true;
     } else {
-        console.log('Error!');
+        console.log('ERROR: Could not add to Chat database! No chat replay found.');
+        return false;
     }
 }
 
@@ -148,8 +165,6 @@ async function addMemberUpdate(member_id, stream_id, stream_date) {
     const member_update = await MemberUpdate.findOneAndUpdate({member_id: member_id}, update);
     await member_update.save(function (err, res) {
         if (err) return console.log(err);
-        console.log(`Added to MemberUpdate DB - ID:${res.last_added_video_id} for Member: ${res.member_id} on Date: ${res.last_added_video_date}`);
+        console.log(`Added to MemberUpdate DB - ID:${res.last_added_video_id} for Member: ${res.member_id} on Date: ${res.last_added_video_date}\n`);      
     });
 }
-
-addNewStreams('ouro_kronii');
