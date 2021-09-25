@@ -107,7 +107,7 @@ async function addNewStreams(member_id) {
                                 }});
         await stream.save(function (err, res) {
             if (err) return console.log(err);
-            console.log(`Added to Stream DB - ID: ${res.id} for Member: ${member_id}!`);
+            console.log(`Added to Stream DB - ID: ${res.id} for Member: ${res.member_id}`);
             addMemberUpdate(member_id, stream_id, stream_details.stream_time_data.actual_start_time);
         });
     }
@@ -127,7 +127,7 @@ async function addChatData(stream_id, member_id) {
             chatters: stream_data.chatter_list});
         await chat.save(function (err, res) {
             if (err) return console.log(err);
-            console.log(`Added to Chat DB - Stream ID: ${stream_id} for Member: ${member_id}!`);
+            console.log(`Added to Chat DB - Stream ID: ${res.stream_id} for Member: ${res.member_id}`);
         })
     } else {
         console.log('Error!');
@@ -148,6 +148,8 @@ async function addMemberUpdate(member_id, stream_id, stream_date) {
     const member_update = await MemberUpdate.findOneAndUpdate({member_id: member_id}, update);
     await member_update.save(function (err, res) {
         if (err) return console.log(err);
-        console.log(`Added to MemberUpdate DB - ID:${stream_id} for Member: ${member_id} on Date: ${stream_date}!`);
+        console.log(`Added to MemberUpdate DB - ID:${res.last_added_video_id} for Member: ${res.member_id} on Date: ${res.last_added_video_date}`);
     });
 }
+
+addNewStreams('ouro_kronii');
