@@ -96,7 +96,7 @@ async function getNewStreams(member_id) {
  * @param {String} stream_id - YouTube video ID
  * @param {Object} stream_details - details of stream (i.e. stream ID, thumbnails)
  */
-async function addNewStreams(member_id, stream_id, stream_details) {
+async function addNewStream(member_id, stream_id, stream_details) {
     const stream = new Stream({id: stream_id, member_id: member_id,
         title: stream_details.stream_title,
         thumbnail_url: stream_details.thumbnail_url,
@@ -161,7 +161,7 @@ async function updateMemberStreamsAndChat(member_id) {
     for (let stream_id of new_stream_array) {
         const stream_details = await getStreamDetails(stream_id);
         if (await addChatData(stream_id, member_id) === true) {
-            await addNewStreams(member_id, stream_id, stream_details);
+            await addNewStream(member_id, stream_id, stream_details);
         } else {
             console.log("ERROR! Live chat was not available!");
         }
