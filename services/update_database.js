@@ -91,23 +91,7 @@ async function getNewStreams(member_id) {
 }
 
 /**
- * Adds new streams and chat to relevant databases for a single member
- * @param {String} member_id - member's ID, in snake-case
- */
-async function updateMemberStreamsAndChat(member_id) {
-    const new_stream_array = await getNewStreams(member_id);
-    for (let stream_id of new_stream_array) {
-        const stream_details = await getStreamDetails(stream_id);
-        if (await addChatData(stream_id, member_id) === true) {
-            await addNewStreams(member_id, stream_id, stream_details);
-        } else {
-            console.log("ERROR! Live chat was not available!");
-        }
-    }
-}
-
-/**
- * Adds new streams to database and updates member update database
+ * Adds new stream to database and updates member update database
  * @param {String} member_id - member's ID, in snake-case
  * @param {String} stream_id - YouTube video ID
  * @param {Object} stream_details - details of stream (i.e. stream ID, thumbnails)
@@ -124,7 +108,6 @@ async function addNewStreams(member_id, stream_id, stream_details) {
     await stream.save(function (err, res) {
         if (err) return console.log(err);
         console.log(`Added to Stream DB - ID: ${res.id} for Member: ${res.member_id}`);
-        addMemberUpdate(member_id, stream_id, stream_details.stream_time_data.actual_start_time);
     });
 }
 
@@ -167,4 +150,22 @@ async function addMemberUpdate(member_id, stream_id, stream_date) {
         if (err) return console.log(err);
         console.log(`Added to MemberUpdate DB - ID:${res.last_added_video_id} for Member: ${res.member_id} on Date: ${res.last_added_video_date}\n`);      
     });
+}
+
+/**
+ * Adds new streams and chat to relevant databases for a single member
+ * @param {String} member_id - member's ID, in snake-case
+ */
+async function updateMemberStreamsAndChat(member_id) {
+    const new_stream_array = await getNewStreams(member_id);
+    for (let stream_id of new_stream_array) {
+        const stream_details = await getStreamDetails(stream_id);
+        if (await addChatData(stream_id, member_id) === true) {
+            await addNewStreams(member_id, stream_id, stream_details);
+        } else {
+            console.log("ERROR! Live chat was not available!");
+        }
+    }
+    const latestStream = (await Stream.find({member_id: member_id}).sort({'times.actual_start_time': -1}).limit(1))[0];
+    await addMemberUpdate(member_id, latestStream.id, latestStream.times.actual_start_time);
 }
