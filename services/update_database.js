@@ -5,6 +5,7 @@ const Member = require('../models/member');
 const Stream = require('../models/stream');
 const Chat = require('../models/chat');
 const MemberUpdate = require('../models/update');
+const Intersection = require('../models/intersection');
 
 const {getStreamDetails} = require('../stream_data');
 
@@ -133,6 +134,21 @@ async function addChatData(stream_id, member_id) {
         return false;
     }
 }
+
+/**
+ * Adds chat intersections (count) to database
+ * @param {String} first_stream_id - YouTube video ID
+ * @param {String} second_stream_id - YouTube video ID
+ */
+async function addIntersection(first_stream_id, second_stream_id) {
+    let common_chatter_object = await Chat.aggregate([
+        {$match: {stream_id: {$in: [first_stream_id, second_stream_id]}}},
+        {$group: {_id: 0, chat1: {$first: "$chatters"}, chat2: {$last: "$chatters"}}},
+        {$project: {common_chatters: {$setIntersection: ["$chat1","$chat2"]}, _id: 0}}
+    ]);
+    let common_chatter_array = common_chatter_object[0].common_chatters;
+}
+
 
 /**
  * Adds most recent update data to database
