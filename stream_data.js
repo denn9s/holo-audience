@@ -24,7 +24,7 @@ async function getStreamDetails(input_id) {
     try {
         const res = await axios.get(BASE_URL, request);
         var stream_title = res.data.items[0].snippet.title;
-        var thumbnail_url = res.data.items[0].snippet.thumbnails.maxres.url;
+        var thumbnail_url = res.data.items[0].snippet.thumbnails.default.url;
         var stream_time_data = res.data.items[0].liveStreamingDetails;
         var data = {"stream_title": stream_title,
                     "thumbnail_url": thumbnail_url,
