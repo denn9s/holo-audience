@@ -169,3 +169,13 @@ async function updateMemberStreamsAndChat(member_id) {
     const latestStream = (await Stream.find({member_id: member_id}).sort({'times.actual_start_time': -1}).limit(1))[0];
     await addMemberUpdate(member_id, latestStream.id, latestStream.times.actual_start_time);
 }
+
+/**
+ * Updates all databases with all members
+ */
+async function updateAll() {
+    const member_array = await getAllMembers();
+    for (let member_id of member_array) {
+        await updateMemberStreamsAndChat(member_id);
+    }
+}
