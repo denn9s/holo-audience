@@ -152,7 +152,6 @@ async function addIntersection(first_stream_id, first_stream_member, second_stre
                                         common_count: common_chatter_count});
     await intersection.save(function(err, res) {
         if (err) return console.log(err);
-        console.log(`Added to Intersection DB - IDs: ${first_stream_id}, ${second_stream_id} for Members: ${first_stream_member}, ${second_stream_member}`);
     })
 }
 
