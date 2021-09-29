@@ -140,13 +140,20 @@ async function addChatData(stream_id, member_id) {
  * @param {String} first_stream_id - YouTube video ID
  * @param {String} second_stream_id - YouTube video ID
  */
-async function addIntersection(first_stream_id, second_stream_id) {
+async function addIntersection(first_stream_id, first_stream_member, second_stream_id, second_stream_member) {
     let common_chatter_object = await Chat.aggregate([
         {$match: {stream_id: {$in: [first_stream_id, second_stream_id]}}},
         {$group: {_id: 0, chat1: {$first: "$chatters"}, chat2: {$last: "$chatters"}}},
         {$project: {common_chatters: {$setIntersection: ["$chat1","$chat2"]}, _id: 0}}
     ]);
-    let common_chatter_array = common_chatter_object[0].common_chatters;
+    let common_chatter_count = common_chatter_object[0].common_chatters.length;
+    let intersection = new Intersection({first_stream_id: first_stream_id, first_stream_member_id: first_stream_member,
+                                        second_stream_id: second_stream_id, second_stream_member_id: second_stream_member,
+                                        common_count: common_chatter_count});
+    await intersection.save(function(err, res) {
+        if (err) return console.log(err);
+        console.log(`Added to Intersection DB - IDs: ${first_stream_id}, ${second_stream_id} for Members: ${first_stream_member}, ${second_stream_member}`);
+    })
 }
 
 
