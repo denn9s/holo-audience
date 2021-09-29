@@ -16,7 +16,7 @@ async function getStreamDetails(input_id) {
     }
     params.append("part", 'liveStreamingDetails');
     params.append("id", input_id);
-    params.append("key", getAPIKey());
+    params.append("key", getCredentials().api_key);
     var request = {
         params: params
     };
@@ -40,14 +40,18 @@ async function getStreamDetails(input_id) {
 }
 
 /**
- * Retrieves API key from local JSON file
- * @returns String of API key
+ * Retrieves credentials from local JSON file
+ * @returns Object of credentials
  */
-function getAPIKey() {
-    let data = fs.readFileSync('client_secret.json');
-    let secret = JSON.parse(data)
-    const api_key = secret['installed']['api_key'];
-    return api_key
+function getCredentials() {
+    let data = fs.readFileSync('credentials.json');
+    let secret = JSON.parse(data);
+    const api_key = secret['api_key'];
+    const mongo_username = secret['mongo_username'];
+    const mongo_password = secret['mongo_password'];
+    const mongo_database = secret['mongo_database'];
+    return ({api_key: api_key, mongo_username: mongo_username, mongo_password: mongo_password, mongo_database: mongo_database});
 }
 
 module.exports.getStreamDetails = getStreamDetails;
+module.exports.getCredentials = getCredentials;
