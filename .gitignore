@@ -237,5 +237,6 @@ cython_debug/
 ### start specific file ignore
 
 client_secret.json
+credentials.json
 
 ### end specific file ignore
