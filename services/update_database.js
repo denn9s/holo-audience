@@ -185,6 +185,10 @@ async function updateMemberStreamsAndChat(member_id) {
         const stream_details = await getStreamDetails(stream_id);
         if (await addChatData(stream_id, member_id) === true) {
             await addNewStream(member_id, stream_id, stream_details);
+            let other_stream_array = await Stream.find({id: {$ne: stream_id}, member_id: {$ne: member_id}});
+            for (let stream of other_stream_array) {
+                await addIntersection(stream_id, member_id, stream.id, stream.member_id);
+            }
         } else {
             console.log("ERROR! Live chat was not available!");
         }
