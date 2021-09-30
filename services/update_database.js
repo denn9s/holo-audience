@@ -161,15 +161,15 @@ async function addIntersection(first_stream_id, first_stream_member, second_stre
 
 /**
  * Adds most recent update data to database
- * @param {String} member_id - member's ID, in snake-case 
- * @param {String} stream_id - YouTube video ID
- * @param {String} stream_date - actual start date/time
+ * @param {String} member_id - member's ID, in snake-case
  */
-async function addMemberUpdate(member_id, stream_id, stream_date) {
-    var stream_count = await Stream.countDocuments({member_id: member_id});
+async function addMemberUpdate(member_id) {
+    let stream_count = await Stream.countDocuments({member_id: member_id});
+    let latest_streams = await Stream.find().sort({"times.actual_start_time": -1}).limit(1);
+    let latest_stream = latest_streams[0];
     const update = {total_videos: stream_count,
-                    last_added_video_id: stream_id, 
-                    last_added_video_date: stream_date};
+                    most_recent_video_id: latest_stream.id, 
+                    most_recent_video_date: latest_stream.times.actual_start_time};
     const member_update = await MemberUpdate.findOneAndUpdate({member_id: member_id}, update);
     await member_update.save(function (err, res) {
         if (err) return console.log(err);
