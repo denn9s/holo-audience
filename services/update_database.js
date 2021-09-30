@@ -173,7 +173,7 @@ async function addMemberUpdate(member_id, stream_id, stream_date) {
     const member_update = await MemberUpdate.findOneAndUpdate({member_id: member_id}, update);
     await member_update.save(function (err, res) {
         if (err) return console.log(err);
-        console.log(`Added to MemberUpdate DB - ID:${res.last_added_video_id} for Member: ${res.member_id} on Date: ${res.last_added_video_date}\n`);      
+        console.log(`Added to MemberUpdate DB - ID:${res.most_recent_video_id} for Member: ${res.member_id} on Date: ${res.most_recent_video_date}\n`);      
     });
 }
 
