@@ -150,12 +150,17 @@ async function addIntersection(first_stream_id, first_stream_member, second_stre
         {$project: {common_chatters: {$setIntersection: ["$chat1","$chat2"]}, _id: 0}}
     ]);
     let common_chatter_count = common_chatter_object[0].common_chatters.length;
-    let intersection = new Intersection({first_stream_id: first_stream_id, first_stream_member_id: first_stream_member,
-                                        second_stream_id: second_stream_id, second_stream_member_id: second_stream_member,
-                                        common_count: common_chatter_count});
-    await intersection.save(function(err, res) {
-        if (err) return console.log(err);
-    })
+    let possible_intersection = await Intersection.findOne({first_stream_id: second_stream_id, second_stream_id: first_stream_id});
+    if (possible_intersection !== null) {
+        let intersection = new Intersection({first_stream_id: first_stream_id, first_stream_member_id: first_stream_member,
+            second_stream_id: second_stream_id, second_stream_member_id: second_stream_member,
+            common_count: common_chatter_count});
+        await intersection.save(function(err, res) {
+            if (err) return console.log(err);
+        })
+    } else {
+        console.log('ERROR: Intersection already exists.');
+    }
 }
 
 
