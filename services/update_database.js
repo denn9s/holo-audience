@@ -23,15 +23,20 @@ mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mong
 
 /**
  * Gets all member IDs in database
+ * @param {String} generation_id - generation's ID, blank for all
  * @returns array of member IDs
  */
- async function getAllMembers() {
-    const member_array = await Member.find();
-    member_id_array = [];
-    for (let mem of member_array) {
-        member_id_array.push(mem.id);
+ async function getAllMembers(generation_id) {
+    let member_array;
+    if (generation_id === '') { member_array = await Member.find({}); }
+    else { member_array = await Member.find({"group_data.generation_name": generation_id}); }
+    if (member_array.length > 0) {
+        member_id_array = [];
+        for (let mem of member_array) {
+            member_id_array.push(mem.id);
+        }
+        return member_id_array;
     }
-    return member_id_array;
 }
 
 /**
@@ -206,9 +211,11 @@ async function updateMemberStreamsAndChat(member_id) {
 
 /**
  * Updates all databases with all members
+ * @param {String} generation_id - generation's ID, blank for all
  */
-async function updateAll() {
-    const member_array = await getAllMembers();
+async function updateAll(generation_id) {
+    const member_array = await getAllMembers(generation_id);
+    for (let mem of member_array) {console.log(mem)}
     for (let member_id of member_array) {
         await updateMemberStreamsAndChat(member_id);
     }
