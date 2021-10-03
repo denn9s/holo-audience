@@ -30,6 +30,22 @@ async function getSurroundingStreamIDs(member_id, stream_id) {
     return [];
 }
 
+async function convertStreamsForChart(stream, other_stream_array) {
+    let chart_data = []
+    for (let other_stream of other_stream_array) {
+        let intersect = await Intersection.findOne({first_stream_id: stream.id, second_stream_id: other_stream.id});
+        if (intersect === null) {
+            intersect = await Intersection.findOne({first_stream_id: other_stream.id, second_stream_id: stream.id});
+        } else {
+            return []
+        }
+        const other_stream_date = new Date(other_stream.times.actual_start_time);
+        const data = {x: other_stream_date.toString(), y: intersect.common_count};
+        chart_data.push(data);
+    }
+    return chart_data;
+}
+
 
 async function getHomepage(req, res) {
     res.render('homepage');
@@ -38,9 +54,13 @@ async function getHomepage(req, res) {
 async function getMember(req, res) {
     const { member_id } = req.params;
     const member = await Member.findOne({id: member_id});
-    const member_name = member.name;
+    const member_name = member.name;    
+    // let stream = await Stream.findOne({id: "lYpfa4-A13o"})
+    // let streams = await getSurroundingStreamIDs("ouro_kronii", "lYpfa4-A13o");
+    // let chart_data = await convertStreamsForChart(stream, streams);
+    const chart_data = [];
     if (member !== null) {
-        res.render('member', { member_id, member_name });
+        res.render('member', { member_id, member_name, chart_data });
     } else {
         res.status(404).send('Sorry, page doesn\'t exist!');
     }
@@ -53,5 +73,3 @@ async function getError(req, res) {
 exports.getHomepage = getHomepage;
 exports.getMember = getMember;
 exports.getError = getError;
-
-// getSurroundingStreamIDs("ouro_kronii", "lYpfa4-A13o");

@@ -5,24 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= member_name %> </title>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
 </head>
 <body>
     <h1>This is the <%= member_name %> page!</h1>
     <canvas id="myChart" width="800" height="800"></canvas>
-    <script> 
+    <script>
+        const chart_data = JSON.parse('<%- JSON.stringify(chart_data) %>');
+        let converted_data = []
+        for (let point of chart_data) {
+            converted_data.push({x: new Date(point.x), y: point.y})
+        }
         var ctx = document.getElementById('myChart');
         var myChart = new Chart(ctx, {
             type: 'scatter',
             data: {
                 datasets: [{
                     label: '# of <%= member_id %>',
-                    data: [{x: new Date("2015-3-15 0:00"), y: 2}, 
-                            {x: new Date("2015-3-25 0:00"), y: 6},
-                            {x: new Date("2015-4-15 0:00"), y: 7},
-                            {x: new Date("2015-5-1 0:00"), y: 4}],
-                    backgroundColor: 'rgb(255, 99, 132)'
+                    data: converted_data,
+                    backgroundColor: 'rgb(255, 0, 0)'
                 }]
             },
             options: {
