@@ -5,7 +5,7 @@ var router = express.Router();
 
 router.route('/').get(controller.getHomepage);
 
-router.route('/common/:member').get(controller.getMember);
+router.route('/common/:member_id').get(controller.getMember);
 
 router.route('*').get(controller.getError);
 
