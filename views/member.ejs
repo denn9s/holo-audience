@@ -16,18 +16,14 @@
     <% } %>
     
     <script>
-        const chart_data = JSON.parse('<%- JSON.stringify(chart_data) %>');
-        let converted_data = []
-        for (let point of chart_data) {
-            converted_data.push({x: new Date(point.x), y: point.y})
-        }
         var ctx = document.getElementById('myChart');
         var myChart = new Chart(ctx, {
             type: 'scatter',
             data: {
                 datasets: [{
-                    label: '# of <%= member_id %>',
-                    data: converted_data,
+                    label: '# of common viewers of <%= member_name %>',
+                    data: [],
+                    pointStyle: [],
                     backgroundColor: 'rgb(255, 0, 0)'
                 }]
             },
@@ -61,6 +57,7 @@
                 myChart.data.datasets[0].data = [];
                     for (let point of data) {
                         myChart.data.datasets[0].data.push({x: new Date(point.x), y: point.y})
+                        myChart.data.datasets[0].pointStyle.push(getStyle(point.other_member_id));
                     }
                     myChart.update();
                 },
@@ -68,6 +65,10 @@
                     alert(err);
                 }
             });
+        }
+
+        function getStyle(member_id) {
+            return '';
         }
     </script>
 </body>

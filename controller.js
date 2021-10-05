@@ -38,7 +38,7 @@ async function convertStreamsForChart(stream, other_stream_array) {
             intersect = await Intersection.findOne({first_stream_id: other_stream.id, second_stream_id: stream.id});
         }
         const other_stream_date = new Date(other_stream.times.actual_start_time);
-        const data = {x: other_stream_date.toString(), y: intersect.common_count};
+        const data = {x: other_stream_date.toString(), y: intersect.common_count, other_member_id: other_stream.member_id};
         chart_data.push(data);
     }
     return chart_data;
@@ -75,6 +75,9 @@ async function getSurroundingChartData(req, res) {
     let stream = await Stream.findOne({id: stream_id});
     let surround_stream_id_array = await getSurroundingStreamIDs(member_id, stream_id);
     let chart_data = await convertStreamsForChart(stream, surround_stream_id_array);
+    chart_data.sort(function(a,b){
+        return new Date(a.x) - new Date(b.x);
+    });
     res.json(chart_data); 
 }
 
