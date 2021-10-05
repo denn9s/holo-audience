@@ -54,11 +54,15 @@
     <script type="text/javascript">
         async function updateChart(stream_id) {
             $.ajax({
-                url : `http://127.0.0.1:3000/api/chart/${stream_id}`,
+                url : `http://127.0.0.1:3000/api/chart/<%=member_id%>/${stream_id}`,
                 type : 'GET',
                 dataType:'json',
-                success : function(data) {              
-                    alert(data.stream_id);
+                success : function(data) {
+                myChart.data.datasets[0].data = [];
+                    for (let point of data) {
+                        myChart.data.datasets[0].data.push({x: new Date(point.x), y: point.y})
+                    }
+                    myChart.update();
                 },
                 error : function(req, err) {
                     alert(err);

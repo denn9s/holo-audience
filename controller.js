@@ -36,8 +36,6 @@ async function convertStreamsForChart(stream, other_stream_array) {
         let intersect = await Intersection.findOne({first_stream_id: stream.id, second_stream_id: other_stream.id});
         if (intersect === null) {
             intersect = await Intersection.findOne({first_stream_id: other_stream.id, second_stream_id: stream.id});
-        } else {
-            return []
         }
         const other_stream_date = new Date(other_stream.times.actual_start_time);
         const data = {x: other_stream_date.toString(), y: intersect.common_count};
@@ -54,13 +52,10 @@ async function getHomepage(req, res) {
 async function getMember(req, res) {
     const { member_id } = req.params;
     const member = await Member.findOne({id: member_id});
-    const member_name = member.name;    
-    // let stream = await Stream.findOne({id: "lYpfa4-A13o"})
-    // let streams = await getSurroundingStreamIDs("ouro_kronii", "lYpfa4-A13o");
-    // let chart_data = await convertStreamsForChart(stream, streams);
-    // let all_streams = await Stream.find({member_id: member.id})
+    const member_name = member.name;
+    let all_streams = await Stream.find({member_id: member.id})
     const chart_data = [];
-    const all_streams = [];
+    // const all_streams = [];
     if (member !== null) {
         res.render('member', { member_id, member_name, chart_data, all_streams });
     } else {
@@ -73,11 +68,14 @@ async function getError(req, res) {
 }
 
 async function getSurroundingChartData(req, res) {
-    const { stream_id } = req.params;
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.json({stream_id: stream_id});
+    const { member_id, stream_id } = req.params;
+    let stream = await Stream.findOne({id: stream_id});
+    let surround_stream_id_array = await getSurroundingStreamIDs(member_id, stream_id);
+    let chart_data = await convertStreamsForChart(stream, surround_stream_id_array);
+    res.json(chart_data); 
 }
 
 exports.getSurroundingChartData = getSurroundingChartData;
