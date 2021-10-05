@@ -6,10 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= member_name %> </title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 <body>
     <h1>This is the <%= member_name %> page!</h1>
-    <canvas id="myChart" width="800" height="800"></canvas>
+    <canvas id="myChart"></canvas>
+    <% for (let stream of all_streams) { %>
+        <button id="<%=stream.id%>" onClick="updateChart(this.id)"><%= stream.member_id %> - <%= stream.id %></button><br>
+    <% } %>
+    
     <script>
         const chart_data = JSON.parse('<%- JSON.stringify(chart_data) %>');
         let converted_data = []
@@ -27,7 +32,7 @@
                 }]
             },
             options: {
-                responsive: false,
+                responsive: true,
                 scales: {
                     x: {
                         ticks: {
@@ -44,6 +49,22 @@
                 }
             }
         });
+    </script>
+
+    <script type="text/javascript">
+        async function updateChart(stream_id) {
+            $.ajax({
+                url : 'https://icanhazdadjoke.com/',
+                type : 'GET',
+                dataType:'json',
+                success : function(data) {              
+                    alert(data.joke);
+                },
+                error : function(req, err) {
+                    alert("ERROR!");
+                }
+            });
+        }
     </script>
 </body>
 </html>
