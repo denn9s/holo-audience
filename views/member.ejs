@@ -54,14 +54,14 @@
     <script type="text/javascript">
         async function updateChart(stream_id) {
             $.ajax({
-                url : 'https://icanhazdadjoke.com/',
+                url : `http://127.0.0.1:3000/api/chart/${stream_id}`,
                 type : 'GET',
                 dataType:'json',
                 success : function(data) {              
-                    alert(data.joke);
+                    alert(data.stream_id);
                 },
                 error : function(req, err) {
-                    alert("ERROR!");
+                    alert(err);
                 }
             });
         }

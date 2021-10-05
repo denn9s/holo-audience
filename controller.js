@@ -58,9 +58,11 @@ async function getMember(req, res) {
     // let stream = await Stream.findOne({id: "lYpfa4-A13o"})
     // let streams = await getSurroundingStreamIDs("ouro_kronii", "lYpfa4-A13o");
     // let chart_data = await convertStreamsForChart(stream, streams);
+    // let all_streams = await Stream.find({member_id: member.id})
     const chart_data = [];
+    const all_streams = [];
     if (member !== null) {
-        res.render('member', { member_id, member_name, chart_data });
+        res.render('member', { member_id, member_name, chart_data, all_streams });
     } else {
         res.status(404).send('Sorry, page doesn\'t exist!');
     }
@@ -70,6 +72,15 @@ async function getError(req, res) {
     res.status(404).send('Sorry, page doesn\'t exist!');
 }
 
+async function getSurroundingChartData(req, res) {
+    const { stream_id } = req.params;
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.json({stream_id: stream_id});
+}
+
+exports.getSurroundingChartData = getSurroundingChartData;
 exports.getHomepage = getHomepage;
 exports.getMember = getMember;
 exports.getError = getError;
