@@ -16,6 +16,12 @@ mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mong
         console.log(err);
     });
 
+/**
+ * Gets surrounding stream IDs (+/- 7 days)
+ * @param {String} member_id - member's ID, in snake-case
+ * @param {String} stream_id - YouTube stream ID
+ * @returns 
+ */
 async function getSurroundingStreamIDs(member_id, stream_id) {
     const stream = await Stream.findOne({id: stream_id, member_id: member_id});
     if (stream !== null) {
@@ -30,6 +36,12 @@ async function getSurroundingStreamIDs(member_id, stream_id) {
     return [];
 }
 
+/**
+ * 
+ * @param {Object} stream - Stream object from MongoDB
+ * @param {Array} other_stream_array - array of surrounding Stream objects from MongoDB
+ * @returns 
+ */
 async function convertStreamsForChart(stream, other_stream_array) {
     let chart_data = []
     for (let other_stream of other_stream_array) {
@@ -44,7 +56,11 @@ async function convertStreamsForChart(stream, other_stream_array) {
     return chart_data;
 }
 
-
+/**
+ * Route for homepage (i.e. www.website.com)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function getHomepage(req, res) {
     res.render('homepage');
 }
@@ -54,19 +70,27 @@ async function getMember(req, res) {
     const member = await Member.findOne({id: member_id});
     const member_name = member.name;
     let all_streams = await Stream.find({member_id: member.id})
-    const chart_data = [];
-    // const all_streams = [];
     if (member !== null) {
-        res.render('member', { member_id, member_name, chart_data, all_streams });
+        res.render('member', { member_id, member_name, all_streams });
     } else {
         res.status(404).send('Sorry, page doesn\'t exist!');
     }
 }
 
+/**
+ * Route for unknown webpage (i.e. www.website.com/blahblahblah)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function getError(req, res) {
     res.status(404).send('Sorry, page doesn\'t exist!');
 }
 
+/**
+ * Route for loading chart data on member page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function getSurroundingChartData(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
