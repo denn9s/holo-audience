@@ -14,11 +14,26 @@
 <body>
     <h1><%= member_name %></h1>
     <canvas id="common_chart_canvas"></canvas>
-    <div id="stream_button_div">
-        <% for (let stream of all_streams) { %>
-            <button type="button" class="btn btn-primary btn-sm" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= stream.member_id %> - <%= stream.id %></button>
-        <% } %>
+    <div class="container-fluid">
+        <div class="row">
+            <% for (let stream of all_streams) { %>
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div id="stream_card_div" class="card text-center border-primary">  
+                        <img class="card-img" src="<%= stream.thumbnail_url %>" style="opacity:0.2;">
+                        <div class="card-img-overlay">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2"><%= stream.title %></h6>
+                                <% let date_options = {year: 'numeric', month: 'long', day: 'numeric' }; %>
+                                <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
+                                <a class="btn btn-info btn-sm stretched-link" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
     </div>
+   
     
     <script>
         var chart_element = document.getElementById('common_chart_canvas');
