@@ -75,23 +75,16 @@
                 dataType:'json',
                 success : function(data) {
                     // clearing all data/datasets
-                    for (let i = 0; i < common_chart.data.datasets.length; i++) {
+                    for (let i in common_chart.data.datasets.length) {
                         common_chart.data.datasets[i].data = [];
                     }
-                    for (let point of data) {
-                        common_chart.data.datasets[0].data.push({x: new Date(point.x), y: point.y})
-                        common_chart.data.datasets[0].pointStyle.push(getStyle(point.other_member_id));
-                    }
+                    common_chart.data.datasets = data;
                     common_chart.update();
                 },
                 error : function(req, err) {
                     alert(err);
                 }
             });
-        }
-
-        function getStyle(member_id) {
-            return '';
         }
     </script>
 </body>

@@ -99,10 +99,23 @@ async function getSurroundingChartData(req, res) {
     let stream = await Stream.findOne({id: stream_id});
     let surround_stream_id_array = await getSurroundingStreamIDs(member_id, stream_id);
     let chart_data = await convertStreamsForChart(stream, surround_stream_id_array);
-    chart_data.sort(function(a,b){
-        return new Date(a.x) - new Date(b.x);
-    });
-    res.json(chart_data); 
+    // creating new data array for each other member to add to datasets
+    final_chart_data = [];
+    for (let item of chart_data) {
+        // checking of label exists
+        if (final_chart_data.some(x => x.label === item.other_member_id)) {
+            for (let index in final_chart_data) {
+                if (final_chart_data[index].label === item.other_member_id) {
+                    final_chart_data[index].data.push({x: Date.parse(item.x), y: item.y});
+                    break;
+                }
+            }
+        } else {
+            final_chart_data.push({label: item.other_member_id, data: []});
+            final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y});
+        }
+    }
+    res.json(final_chart_data); 
 }
 
 exports.getSurroundingChartData = getSurroundingChartData;
