@@ -20,9 +20,9 @@ mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mong
  * Gets surrounding stream IDs (+/- 7 days)
  * @param {String} member_id - member's ID, in snake-case
  * @param {String} stream_id - YouTube stream ID
- * @returns 
+ * @returns Array of Stream objects
  */
-async function getSurroundingStreamIDs(member_id, stream_id) {
+async function getSurroundingStreams(member_id, stream_id) {
     const stream = await Stream.findOne({id: stream_id, member_id: member_id});
     if (stream !== null) {
         let floor_date = new Date(stream.times.actual_start_time);
@@ -40,9 +40,9 @@ async function getSurroundingStreamIDs(member_id, stream_id) {
  * 
  * @param {Object} stream - Stream object from MongoDB
  * @param {Array} other_stream_array - array of surrounding Stream objects from MongoDB
- * @returns 
+ * @returns Array of chart data objects that contain coordinates and member names
  */
-async function convertStreamsForChart(stream, other_stream_array) {
+async function convertIntersectsToChartData(stream, other_stream_array) {
     let chart_data = []
     for (let other_stream of other_stream_array) {
         let intersect = await Intersection.findOne({first_stream_id: stream.id, second_stream_id: other_stream.id});
@@ -65,6 +65,11 @@ async function getHomepage(req, res) {
     res.render('homepage');
 }
 
+/**
+ * Route for member page (i.e. www.website.com/common/member_name)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 async function getMember(req, res) {
     const { member_id } = req.params;
     const member = await Member.findOne({id: member_id});
@@ -91,14 +96,14 @@ async function getError(req, res) {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-async function getSurroundingChartData(req, res) {
+async function getChartData(req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     const { member_id, stream_id } = req.params;
     let stream = await Stream.findOne({id: stream_id});
-    let surround_stream_id_array = await getSurroundingStreamIDs(member_id, stream_id);
-    let chart_data = await convertStreamsForChart(stream, surround_stream_id_array);
+    let surround_stream_id_array = await getSurroundingStreams(member_id, stream_id);
+    let chart_data = await convertIntersectsToChartData(stream, surround_stream_id_array);
     // creating new data array for each other member to add to datasets
     final_chart_data = [];
     for (let item of chart_data) {
@@ -112,14 +117,14 @@ async function getSurroundingChartData(req, res) {
             }
         } else {
             let current_member = await Member.findOne({id: item.other_member_id});
-            final_chart_data.push({label: item.other_member_id, data: [], backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`});
+            final_chart_data.push({label: item.other_member_id, data: [], radius: 5, backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`});
             final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y});
         }
     }
     res.json(final_chart_data); 
 }
 
-exports.getSurroundingChartData = getSurroundingChartData;
+exports.getChartData = getChartData;
 exports.getHomepage = getHomepage;
 exports.getMember = getMember;
 exports.getError = getError;
