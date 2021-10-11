@@ -1,7 +1,11 @@
-canvas {
-    margin-bottom: 2rem;
+#common_chart_canvas {
+    margin: 3rem;
 }
 
-.card {
+.stream-card {
     margin: 5px;
+}
+
+.card-stream-thumbnail {
+    opacity: 0.2;
 }

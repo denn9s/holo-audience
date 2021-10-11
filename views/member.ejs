@@ -19,8 +19,8 @@
         <div class="row">
             <% for (let stream of all_streams) { %>
                 <div class="col-md-3 col-sm-6 col-12">
-                    <div id="stream_card_div" class="card text-center border-primary">  
-                        <img class="card-img" src="<%= stream.thumbnail_url %>" style="opacity:0.2;">
+                    <div id="stream_card_div" class="stream-card card text-center border-primary">  
+                        <img class="card-stream-thumbnail card-img" src="<%= stream.thumbnail_url %>">
                         <div class="card-img-overlay">
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2"><%= stream.title %></h6>
