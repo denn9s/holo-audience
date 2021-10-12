@@ -73,12 +73,12 @@ async function getHomepage(req, res) {
 async function getMember(req, res) {
     const { member_id } = req.params;
     const member = await Member.findOne({id: member_id});
-    const member_name = member.name;
-    let all_streams = await Stream.find({member_id: member.id})
-    if (member !== null) {
-        res.render('member', { member_id, member_name, all_streams });
-    } else {
+    if (member === null) {
         res.status(404).send('Sorry, page doesn\'t exist!');
+    } else {
+        const member_name = member.name;
+        let all_streams = await Stream.find({member_id: member.id})
+        res.render('member', { member_id, member_name, all_streams });
     }
 }
 
