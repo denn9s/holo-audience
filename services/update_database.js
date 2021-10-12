@@ -156,13 +156,18 @@ async function addIntersection(first_stream_id, first_stream_member, second_stre
     ]);
     let common_chatter_count = common_chatter_object[0].common_chatters.length;
     let possible_intersection = await Intersection.findOne({first_stream_id: second_stream_id, second_stream_id: first_stream_id});
-    if (possible_intersection !== null) {
-        let intersection = new Intersection({first_stream_id: first_stream_id, first_stream_member_id: first_stream_member,
-            second_stream_id: second_stream_id, second_stream_member_id: second_stream_member,
-            common_count: common_chatter_count});
-        await intersection.save(function(err, res) {
-            if (err) return console.log(err);
-        })
+    if (possible_intersection === null) {
+        possible_intersection = await Intersection.findOne({first_stream_id: first_stream_id, second_stream_id: second_stream_id});
+        if (possible_intersection === null) {
+            let intersection = new Intersection({first_stream_id: first_stream_id, first_stream_member_id: first_stream_member,
+                second_stream_id: second_stream_id, second_stream_member_id: second_stream_member,
+                common_count: common_chatter_count});
+            await intersection.save(function(err, res) {
+                if (err) return console.log(err);
+            })
+        } else {
+            console.log('ERROR: Intersection already exists.');
+        }
     } else {
         console.log('ERROR: Intersection already exists.');
     }
