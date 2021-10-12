@@ -117,7 +117,16 @@ async function getChartData(req, res) {
             }
         } else {
             let current_member = await Member.findOne({id: item.other_member_id});
-            final_chart_data.push({label: item.other_member_id, data: [], radius: 5, backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`});
+            let input_data = {
+                label: item.other_member_id,
+                data: [],
+                showLine: true,
+                radius: 5,
+                borderWidth: 1,
+                borderColor: `rgba(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue}, 0.4)`,
+                backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`
+            }
+            final_chart_data.push(input_data);
             final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y});
         }
     }
