@@ -133,7 +133,18 @@ async function getChartData(req, res) {
     res.json(final_chart_data); 
 }
 
+/**
+ * Route for loading member listing homepage (to show all available members)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+async function getMemberHomepage(req, res) {
+    const member_array = await Member.find({});
+    res.render('member_homepage', { member_array });
+}
+
 exports.getChartData = getChartData;
 exports.getHomepage = getHomepage;
+exports.getMemberHomepage = getMemberHomepage;
 exports.getMember = getMember;
 exports.getError = getError;

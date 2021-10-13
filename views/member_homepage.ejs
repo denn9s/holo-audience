@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Members</title>
+</head>
+<body>
+    <% for (let member of member_array) { %>
+        <a href="/common/<%= member.id %>"><%= member.name %></a>
+    <% } %>
+</body>
+</html>
