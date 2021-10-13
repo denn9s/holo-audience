@@ -120,10 +120,10 @@ async function getChartData(req, res) {
             let input_data = {
                 label: item.other_member_id,
                 data: [],
-                showLine: true,
+                // showLine: true,
+                // borderWidth: 1,
+                // borderColor: `rgba(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue}, 0.4)`,
                 radius: 5,
-                borderWidth: 1,
-                borderColor: `rgba(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue}, 0.4)`,
                 backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`
             }
             final_chart_data.push(input_data);

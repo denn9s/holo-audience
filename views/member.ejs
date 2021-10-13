@@ -14,12 +14,11 @@
 </head>
 <body>
     <h1><%= member_name %></h1>
-    <!-- <canvas id="common_chart_canvas"></canvas> -->
     <canvas id="common_chart_canvas"></canvas>
     <div class="container-fluid">
         <div class="row">
+            <% all_streams.sort((a,b) => (b.times.actual_start_time > a.times.actual_start_time) ? 1 : ((a.times.actual_start_time > b.times.actual_start_time) ? -1 : 0)) %>
             <% for (let stream of all_streams) { %>
-                <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12"> -->
                 <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                     <div class="stream-card card text-center border-dark"> 
                         <img class="card-stream-thumbnail card-img" src="<%= stream.thumbnail_url %>">
@@ -66,6 +65,12 @@
                     },
                     yAxis: {
                         beginAtZero: true
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '<%= member_name %>'
                     }
                 }
             }
