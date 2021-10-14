@@ -57,12 +57,13 @@ async function convertIntersectsToChartData(stream, other_stream_array) {
 }
 
 /**
- * Route for homepage (i.e. www.website.com)
+ * Route for loading member listing homepage (to show all available members)
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-async function getHomepage(req, res) {
-    res.render('homepage');
+ async function getHomepage(req, res) {
+    const member_array = await Member.find({});
+    res.render('homepage', { member_array });
 }
 
 /**
@@ -136,18 +137,13 @@ async function getChartData(req, res) {
     res.json(final_chart_data); 
 }
 
-/**
- * Route for loading member listing homepage (to show all available members)
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
-async function getMemberHomepage(req, res) {
-    const member_array = await Member.find({});
-    res.render('member_homepage', { member_array });
+async function getStream(req, res) {
+    console.log(req.params);
+    res.send('hello');
 }
 
 exports.getChartData = getChartData;
 exports.getHomepage = getHomepage;
-exports.getMemberHomepage = getMemberHomepage;
+exports.getStream = getStream;
 exports.getMember = getMember;
 exports.getError = getError;
