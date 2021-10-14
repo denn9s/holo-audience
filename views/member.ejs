@@ -43,12 +43,7 @@
 
             type: 'scatter',
             data: {
-                datasets: [{
-                    // label: '# of common viewers of <%= member_name %>',
-                    // data: [],
-                    // pointStyle: [],
-                    // backgroundColor: 'rgb(255, 0, 0)'
-                }]
+                datasets: [{}]
             },
             options: {
                 maintainAspectRatio: false,
@@ -71,7 +66,21 @@
                     title: {
                         display: true,
                         text: '<%= member_name %>'
-                    }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(ctx) {
+                                let title_array = []
+                                for (let point of ctx) {
+                                    title_array.push(point.dataset.stream_title);
+                                }
+                                return title_array
+                            },
+                            label: function(ctx) {
+                                return ctx.dataset.stream_member;
+                            }
+                        }
+                    },
                 }
             }
         });

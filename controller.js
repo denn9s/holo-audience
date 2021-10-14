@@ -50,7 +50,7 @@ async function convertIntersectsToChartData(stream, other_stream_array) {
             intersect = await Intersection.findOne({first_stream_id: other_stream.id, second_stream_id: stream.id});
         }
         const other_stream_date = new Date(other_stream.times.actual_start_time);
-        const data = {x: other_stream_date.toString(), y: intersect.common_count, other_member_id: other_stream.member_id};
+        const data = {x: other_stream_date.toString(), y: intersect.common_count, other_member_id: other_stream.member_id, other_stream_id: other_stream.id, other_stream_title: other_stream.title};
         chart_data.push(data);
     }
     return chart_data;
@@ -119,6 +119,9 @@ async function getChartData(req, res) {
             let current_member = await Member.findOne({id: item.other_member_id});
             let input_data = {
                 label: item.other_member_id,
+                stream_id: item.other_stream_id,
+                stream_title: item.other_stream_title,
+                stream_member: current_member.name,
                 data: [],
                 // showLine: true,
                 // borderWidth: 1,
