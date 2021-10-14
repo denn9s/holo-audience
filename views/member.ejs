@@ -73,15 +73,27 @@
                             title: function(ctx) {
                                 let title_array = []
                                 for (let point of ctx) {
-                                    title_array.push(point.dataset.stream_title);
+                                    let dataset_index = point.dataIndex;
+                                    title_array.push(point.dataset.data[dataset_index].stream_title);
                                 }
                                 return title_array
                             },
                             label: function(ctx) {
                                 return ctx.dataset.stream_member;
+                            },
+                            footer: function(ctx) {
+                                let count_array = []
+                                for (let point of ctx) {
+                                    count_array.push(`Common Viewers: ${point.formattedValue}`)
+                                }
+                                return count_array
+                            },
+                            afterFooter: function(ctx) {
+                                let formatted_date = new Date(parseInt(ctx[0].label.replaceAll(',', ''))).toLocaleString('en-US');
+                                return `Stream Time: ${formatted_date.toString()}`;
                             }
                         }
-                    },
+                    }
                 }
             }
         });
@@ -106,6 +118,10 @@
                     alert(err);
                 }
             });
+        }
+        
+        if ('<%=stream_id%>' !== null) {
+            updateChart('<%=stream_id%>')
         }
     </script>
 </body>

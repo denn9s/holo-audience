@@ -67,7 +67,7 @@ async function convertIntersectsToChartData(stream, other_stream_array) {
 }
 
 /**
- * Route for member page (i.e. www.website.com/common/member_name)
+ * Route for member page (i.e. www.website.com/member_name)
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
@@ -76,11 +76,25 @@ async function getMember(req, res) {
     const member = await Member.findOne({id: member_id});
     if (member === null) {
         res.status(404).send('Sorry, page doesn\'t exist!');
-    } else {
-        const member_name = member.name;
-        let all_streams = await Stream.find({member_id: member.id})
-        res.render('member', { member_id, member_name, all_streams });
+        return;
     }
+    let stream_id = null;
+    const member_name = member.name;
+    let all_streams = await Stream.find({member_id: member.id})
+    // if stream_id is provided in route
+    if (req.params.hasOwnProperty('stream_id')) {
+        stream_id = req.params.stream_id;
+    }
+    res.render('member', { member_id, member_name, all_streams, stream_id });
+}
+
+/**
+ * Route for member page with stream ID in request (i.e. www.website.com/member_name/stream_id)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+async function getStream(req, res) {
+    getMember(req, res);
 }
 
 /**
@@ -93,7 +107,7 @@ async function getError(req, res) {
 }
 
 /**
- * Route for loading chart data on member page
+ * API route for retrieving formatted chart data
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
@@ -112,7 +126,7 @@ async function getChartData(req, res) {
         if (final_chart_data.some(x => x.label === item.other_member_id)) {
             for (let index in final_chart_data) {
                 if (final_chart_data[index].label === item.other_member_id) {
-                    final_chart_data[index].data.push({x: Date.parse(item.x), y: item.y});
+                    final_chart_data[index].data.push({x: Date.parse(item.x), y: item.y, stream_id: item.other_stream_id, stream_title: item.other_stream_title});
                     break;
                 }
             }
@@ -120,8 +134,6 @@ async function getChartData(req, res) {
             let current_member = await Member.findOne({id: item.other_member_id});
             let input_data = {
                 label: item.other_member_id,
-                stream_id: item.other_stream_id,
-                stream_title: item.other_stream_title,
                 stream_member: current_member.name,
                 data: [],
                 // showLine: true,
@@ -131,19 +143,17 @@ async function getChartData(req, res) {
                 backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`
             }
             final_chart_data.push(input_data);
-            final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y});
+            final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y, stream_id: item.other_stream_id, stream_title: item.other_stream_title});
         }
     }
     res.json(final_chart_data); 
 }
 
-async function getStream(req, res) {
-    console.log(req.params);
-    res.send('hello');
-}
-
-exports.getChartData = getChartData;
+// regular route
 exports.getHomepage = getHomepage;
 exports.getStream = getStream;
 exports.getMember = getMember;
 exports.getError = getError;
+
+// api route
+exports.getChartData = getChartData;
