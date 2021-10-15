@@ -35,17 +35,19 @@
             <% } %>
         </div>
     </div>
-   
-    
+
     <script>
         var chart_element = document.getElementById('common_chart_canvas');
         var common_chart = new Chart(chart_element, {
-
             type: 'scatter',
             data: {
                 datasets: [{}]
             },
             options: {
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest'
+                },
                 maintainAspectRatio: false,
                 responsive: true,
                 scales: {
@@ -68,6 +70,7 @@
                         text: '<%= member_name %>'
                     },
                     tooltip: {
+                        enabled: true,
                         mode: 'nearest',
                         callbacks: {
                             title: function(ctx) {
@@ -119,10 +122,26 @@
                 }
             });
         }
-        
-        if ('<%=stream_id%>' !== null) {
+
+        async function test(id) {
+            console.log(id);
+        }
+
+        if ('<%=stream_id%>' !== '') {
             updateChart('<%=stream_id%>')
         }
+
+        let canvas = document.getElementById("common_chart_canvas");
+        canvas.onclick = function(evt) {
+            let points = common_chart.getElementsAtEventForMode(evt, 'nearest', {}, true);
+            if (points.length) {
+                const point = points[0];
+                let datasetIndex = point.datasetIndex;
+                var member_id = common_chart.data.datasets[datasetIndex].label;
+                var stream_id = common_chart.data.datasets[point.datasetIndex].data[point.index].stream_id;
+                window.location.href = `http://localhost:3000/${member_id}/${stream_id}`;
+            }
+        };
     </script>
 </body>
 </html>

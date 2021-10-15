@@ -4,7 +4,6 @@ const credentials = getCredentials();
 
 const Member = require('./models/member');
 const Stream = require('./models/stream');
-const Intersection = require('./models/intersection');
 
 const {getSurroundingStreams, convertIntersectsToChartData} = require('./controller_helper');
 
