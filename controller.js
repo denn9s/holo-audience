@@ -47,8 +47,9 @@ async function getMember(req, res) {
     // if stream_id is provided in route
     if (req.params.hasOwnProperty('stream_id')) {
         stream_id = req.params.stream_id;
+        stream_title = all_streams.find(x => x.id === stream_id).title;
     }
-    res.render('member', { member_id, member_name, all_streams, stream_id });
+    res.render('member', { member_id, member_name, all_streams, stream_id, stream_title });
 }
 
 /**

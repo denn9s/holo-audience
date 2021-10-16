@@ -24,7 +24,7 @@
                         <img class="card-stream-thumbnail card-img" src="<%= stream.thumbnail_url %>">
                         <div class="card-img-overlay">
                             <div class="card-body">
-                                <h6 class="stream-card-header card-subtitle mb-2 crop-text-3"><%= stream.title %></h6>
+                                <h6 class="stream-card-header card-subtitle mb-2 crop-text-3" id="header_<%=stream.id%>"><%= stream.title %></h6>
                                 <% let date_options = {year: 'numeric', month: 'short', day: 'numeric' }; %>
                                 <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
                                 <a class="btn btn-info w-100 stretched-link" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
@@ -52,6 +52,7 @@
                 responsive: true,
                 scales: {
                     x: {
+                        display: false,
                         ticks: {
                             callback: function(value, index, values) {
                                 let options = {year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -60,14 +61,21 @@
                             }
                         }
                     },
-                    yAxis: {
-                        beginAtZero: true
+                    y: {
+                        beginAtZero: true,
                     }
                 },
                 plugins: {
                     title: {
                         display: true,
                         text: '<%= member_name %>'
+                    },
+                    subtitle: {
+                        display: true,
+                        text: '<%= stream_title %>'
+                    },
+                    legend: {
+                        display: false
                     },
                     tooltip: {
                         enabled: true,
@@ -104,6 +112,7 @@
 
     <script type="text/javascript">
         async function updateChart(stream_id) {
+            let stream_header = document.getElementById(`header_${stream_id}`)
             $(window).scrollTop(0);
             $.ajax({
                 url : `http://127.0.0.1:3000/api/chart/<%=member_id%>/${stream_id}`,
@@ -115,6 +124,9 @@
                         common_chart.data.datasets[i].data = [];
                     }
                     common_chart.data.datasets = data;
+                    common_chart.options.scales.x.display = true;
+                    common_chart.options.plugins.legend.display = true;
+                    common_chart.options.plugins.subtitle.text = stream_header.textContent;
                     common_chart.update();
                 },
                 error : function(req, err) {
