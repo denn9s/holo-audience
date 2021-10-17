@@ -42,6 +42,7 @@ async function getMember(req, res) {
         return;
     }
     let stream_id = null;
+    let stream_title = null;
     const member_name = member.name;
     let all_streams = await Stream.find({member_id: member.id})
     // if stream_id is provided in route
