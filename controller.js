@@ -111,6 +111,10 @@ async function getChartData(req, res) {
             final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y, stream_id: item.other_stream_id, stream_title: item.other_stream_title});
         }
     }
+    final_chart_data_sorted = [];
+    for (let item in final_chart_data) {
+        final_chart_data[parseInt(item)].data.sort((a,b) => (a.x > b.x) ? 1 : ((b.x > a.x) ? -1 : 0))
+    }
     res.json(final_chart_data); 
 }
 
