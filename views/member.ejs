@@ -43,7 +43,10 @@
             data: {
                 datasets: [{}]
             },
-            options: {
+            options: {    
+                animation: {
+                    duration: 500
+                },
                 interaction: {
                     intersect: false,
                     mode: 'nearest'
@@ -135,12 +138,33 @@
             });
         }
 
-        async function test(id) {
-            console.log(id);
-        }
-
         if ('<%=stream_id%>' !== '') {
             updateChart('<%=stream_id%>')
+        }
+
+        
+        common_chart.options.plugins.legend.onHover = function(x, y, z) {
+            for (let index in common_chart.data.datasets) {
+                index = parseInt(index);
+                if (y.datasetIndex === index) {
+                    common_chart.data.datasets[index].radius = 7;
+                } else {
+                    common_chart.data.datasets[index].radius = 2;
+                }
+            }
+            common_chart.update();
+        }
+
+        common_chart.options.plugins.legend.onLeave = function(x, y, z) {
+            for (let index in common_chart.data.datasets) {
+                index = parseInt(index);
+                if (y.datasetIndex === index) {
+                    common_chart.data.datasets[index].radius = 5;
+                } else {
+                    common_chart.data.datasets[index].radius = 5;
+                }
+            }
+            common_chart.update();
         }
 
         let canvas = document.getElementById("common_chart_canvas");
