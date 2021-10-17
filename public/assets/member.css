@@ -22,14 +22,18 @@ body {
 .stream-card-header {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5%;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.3);
+    border-width: 1px;
     padding: 0.2rem;
 }
 
 .card-stream-thumbnail {
-    opacity: 0.4;
+    opacity: 0.5;
     height: 10rem;
     object-fit: cover;
     display: block;
+    filter: blur(1px);
     width: 100%;
 }
 
