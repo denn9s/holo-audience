@@ -148,6 +148,7 @@
                 index = parseInt(index);
                 if (y.datasetIndex === index) {
                     common_chart.data.datasets[index].radius = 7;
+                    common_chart.data.datasets[index].showLine = true;
                 } else {
                     common_chart.data.datasets[index].radius = 2;
                 }
@@ -160,6 +161,7 @@
                 index = parseInt(index);
                 if (y.datasetIndex === index) {
                     common_chart.data.datasets[index].radius = 5;
+                    common_chart.data.datasets[index].showLine = false;
                 } else {
                     common_chart.data.datasets[index].radius = 5;
                 }
