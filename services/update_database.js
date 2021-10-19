@@ -66,6 +66,7 @@ async function getAllStreams(member_id) {
  * @returns array of new stream IDs
  */
 async function getNewStreams(member_id) {
+    // let current_stream_id_list = await getOldStreams(member_id);
     let current_stream_id_list = await getAllStreams(member_id);
     let new_stream_id_list = [];
     for (let stream_id of current_stream_id_list) {
@@ -105,10 +106,11 @@ async function getNewStreams(member_id) {
  * @param {String} stream_id - YouTube video ID
  * @param {Object} stream_details - details of stream (i.e. stream ID, thumbnails)
  */
-async function addNewStream(member_id, stream_id, stream_details) {
+async function addNewStream(member_id, stream_id, stream_details, chatter_count) {
     const stream = new Stream({id: stream_id, member_id: member_id,
         title: stream_details.stream_title,
         thumbnail_url: stream_details.thumbnail_url,
+        unique_viewer_count: chatter_count,
         times: {
             actual_start_time: stream_details.stream_time_data.actual_start_time,
             actual_end_time: stream_details.stream_time_data.actual_end_time,
@@ -128,18 +130,20 @@ async function addNewStream(member_id, stream_id, stream_details) {
  */
 async function addChatData(stream_id, member_id) {
     let stream_data = await getChatData(stream_id);
+    let chatter_count = 0;
     if (stream_data.success === 1) {
         let chat = new Chat({stream_id: stream_id, member_id: member_id, 
             unique_chatter_count: stream_data.unique_chatter_count,
             chatters: stream_data.chatter_list});
+        chatter_count = stream_data.unique_chatter_count;
         await chat.save(function (err, res) {
             if (err) return console.log(err);
             console.log(`Added to Chat DB - ID: ${res.stream_id} for Member: ${res.member_id}`);
         })
-        return true;
+        return {success: true, chatter_count: chatter_count};
     } else {
         console.log('ERROR: Could not add to Chat database! No chat replay found.');
-        return false;
+        return {success: false, chatter_count: chatter_count};
     }
 }
 
@@ -200,8 +204,9 @@ async function updateMemberStreamsAndChat(member_id) {
     const new_stream_array = await getNewStreams(member_id);
     for (let stream_id of new_stream_array) {
         const stream_details = await getStreamDetails(stream_id);
-        if (await addChatData(stream_id, member_id) === true) {
-            await addNewStream(member_id, stream_id, stream_details);
+        let chat = await addChatData(stream_id, member_id);
+        if (chat.success === true) {
+            await addNewStream(member_id, stream_id, stream_details, chat.chatter_count);
             let other_stream_array = await Stream.find({id: {$ne: stream_id}, member_id: {$ne: member_id}});
             for (let stream of other_stream_array) {
                 await addIntersection(stream_id, member_id, stream.id, stream.member_id);
