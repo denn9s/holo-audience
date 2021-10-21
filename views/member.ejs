@@ -13,7 +13,11 @@
     <link href= "/assets/member.css" rel="stylesheet" />
 </head>
 <body>
-    <h1><%= member_name %></h1>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="d-md-flex d-block flex-row mx-md-auto mx-0">
+            <a class="navbar-brand" href="#"><%= member_name %></a>
+        </div>
+    </nav>
     <canvas id="common_chart_canvas"></canvas>
     <div class="container-fluid">
         <div class="row">
@@ -71,11 +75,12 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: '<%= member_name %>'
-                    },
-                    subtitle: {
-                        display: true,
-                        text: '<%= stream_title %>'
+                        text: '<%= stream_title %>',
+                        font: {
+                            family: 'Fira Sans',
+                            size: 20,
+                            weight: 'bold'
+                        }
                     },
                     legend: {
                         display: false
@@ -129,7 +134,7 @@
                     common_chart.data.datasets = data;
                     common_chart.options.scales.x.display = true;
                     common_chart.options.plugins.legend.display = true;
-                    common_chart.options.plugins.subtitle.text = stream_header.textContent;
+                    common_chart.options.plugins.title.text = stream_header.textContent;
                     common_chart.update();
                 },
                 error : function(req, err) {
