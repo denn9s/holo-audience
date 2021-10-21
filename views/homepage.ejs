@@ -4,11 +4,62 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet"> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link href= "/assets/homepage.css" rel="stylesheet" />
     <title>Available Members</title>
 </head>
 <body>
-    <% for (let member of member_array) { %>
-        <a href="/<%= member.id %>"><%= member.name %></a>
-    <% } %>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="d-md-flex d-block flex-row mx-md-auto mx-0">
+            <a class="navbar-brand" href="#">Hololive EN Viewer Overlap</a>
+        </div>
+    </nav>
+    
+    <p class="homepage-description text-center">
+        This page is created to show the total chatter overlap between Hololive EN streams.
+    </p>
+
+    <div class="container-lg">
+        <div class="row justify-content-center">
+            <div class="col-md-4 col-12">
+                <% for (let member of member_array) { %>
+                    <% if (member.group_data.generation_name === "holo_myth") { %>
+                        <div class="card member-card text-center border-dark">
+                            <div class="card-body">
+                                <h5 class="card-title"><%=member.name%></h5>
+                                <a href="/<%=member.id%>" class="btn btn-info stretched-link">stream list</a>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+            <div class="col-md-4 col-12">
+                <% for (let member of member_array) { %>
+                    <% if (member.group_data.generation_name === "project_hope") { %>
+                        <div class="card member-card text-center border-dark">
+                            <div class="card-body">
+                                <h5 class="card-title"><%=member.name%></h5>
+                                <a href="/<%=member.id%>" class="btn btn-info stretched-link">stream list</a>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+            <div class="col-md-4 col-12">
+                <% for (let member of member_array) { %>
+                    <% if (member.group_data.generation_name === "holo_council") { %>
+                        <div class="card member-card text-center border-dark">
+                            <div class="card-body">
+                                <h5 class="card-title"><%=member.name%></h5>
+                                <a href="/<%=member.id%>" class="btn btn-info stretched-link">stream list</a>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

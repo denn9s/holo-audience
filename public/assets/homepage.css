@@ -1,0 +1,32 @@
+body {
+    font-family: 'Fira Sans', sans-serif !important;
+}
+
+.homepage-description {
+    font-size: medium;
+    margin: 1rem;
+    padding: 1rem;
+    background-color: rgb(201, 201, 201);
+}
+
+.member-card {
+    min-width: 10rem;
+    margin: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.member-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.navbar.center .navbar-inner {
+    text-align: center;
+}
+
+.navbar.center .navbar-inner .nav {
+    float: none;
+    display:inline-block;
+    vertical-align: middle;
+}
