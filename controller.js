@@ -132,6 +132,19 @@ async function getChartData(req, res) {
     res.json(final_chart_data); 
 }
 
+/**
+ * API route for retrieving member data
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+ async function getAllMemberData(req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    const member_array = await Member.find({});
+    res.json(member_array);
+ }
+
 // regular route
 exports.getHomepage = getHomepage;
 exports.getStream = getStream;
@@ -140,3 +153,4 @@ exports.getError = getError;
 
 // api route
 exports.getChartData = getChartData;
+exports.getAllMemberData = getAllMemberData;
