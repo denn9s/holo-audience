@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet"> 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
     <link href= "/assets/homepage.css" rel="stylesheet" />
@@ -22,44 +23,50 @@
     </p>
 
     <div class="container-lg">
-        <div class="row justify-content-center">
-            <div class="col-md-4 col-12">
-                <% for (let member of member_array) { %>
-                    <% if (member.group_data.generation_name === "holo_myth") { %>
-                        <div class="card member-card text-center border-dark">
-                            <div class="card-body">
-                                <h5 class="card-title"><%=member.name%></h5>
-                                <a href="/<%=member.id%>" class="btn btn-info stretched-link">stream list</a>
-                            </div>
-                        </div>
-                    <% } %>
-                <% } %>
-            </div>
-            <div class="col-md-4 col-12">
-                <% for (let member of member_array) { %>
-                    <% if (member.group_data.generation_name === "project_hope") { %>
-                        <div class="card member-card text-center border-dark">
-                            <div class="card-body">
-                                <h5 class="card-title"><%=member.name%></h5>
-                                <a href="/<%=member.id%>" class="btn btn-info stretched-link">stream list</a>
-                            </div>
-                        </div>
-                    <% } %>
-                <% } %>
-            </div>
-            <div class="col-md-4 col-12">
-                <% for (let member of member_array) { %>
-                    <% if (member.group_data.generation_name === "holo_council") { %>
-                        <div class="card member-card text-center border-dark">
-                            <div class="card-body">
-                                <h5 class="card-title"><%=member.name%></h5>
-                                <a href="/<%=member.id%>" class="btn btn-info stretched-link">stream list</a>
-                            </div>
-                        </div>
-                    <% } %>
-                <% } %>
-            </div>
+        <div id="member_row"class="row justify-content-center">
+            <!-- JS fills data here -->
         </div>
     </div>
 </body>
+
+<script type="text/javascript">
+    $.ajax({
+        url : 'http://127.0.0.1:3000/api/member/all/',
+        type : 'GET',
+        dataType:'json',
+        success : function(data) {
+            let created_columns = [];
+            let member_row = document.getElementById('member_row');
+            for (let member of data) {
+                if (created_columns.includes(member.group_data.generation_name) === false) {
+                    // add new column
+                    created_columns.push(member.group_data.generation_name);
+                    const new_column = document.createElement('div');
+                    new_column.setAttribute('id', `${member.group_data.generation_name}_col`)
+                    new_column.classList.add('col-md-4', 'col-12');
+                    member_row.appendChild(new_column);
+                }
+                const member_card = document.createElement('div');
+                member_card.classList.add('card', 'member-card', 'text-center', 'border-dark');
+                const member_card_body = document.createElement('div');
+                member_card_body.classList.add('card-body');
+                const member_card_title = document.createElement('h5');
+                member_card_title.classList.add('card-title');
+                member_card_title.textContent = member.name;
+                const member_card_link = document.createElement('a');
+                member_card_link.classList.add('btn', 'btn-info', 'stretched-link');
+                member_card_link.setAttribute('href', `/${member.id}`);
+                member_card_link.textContent = 'click me pls';
+                member_card_body.appendChild(member_card_title);
+                member_card_body.appendChild(member_card_link);
+                member_card.appendChild(member_card_body);
+                const found_column = document.getElementById(`${member.group_data.generation_name}_col`);
+                found_column.appendChild(member_card);
+            }
+        },
+        error : function(req, err) {
+            alert(err);
+        }
+    });
+</script>
 </html>
