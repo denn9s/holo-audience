@@ -26,7 +26,21 @@ mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mong
  */
  async function getHomepage(req, res) {
     const member_array = await Member.find({});
-    res.render('homepage', { member_array });
+    let trimmed_member_array = [];
+    for (let member of member_array) {
+        // doesn't include OID and color
+        let trimmed_member = {
+            id: member.id, 
+            name: member.name, 
+            youtube_id: member.youtube_id,
+            group_data: {
+                group_name: member.group_data.group_name,
+                generation_name: member.group_data.generation_name
+            }
+        }
+        trimmed_member_array.push(trimmed_member);
+    }
+    res.render('homepage', { member_array: trimmed_member_array });
 }
 
 /**
