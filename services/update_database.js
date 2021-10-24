@@ -66,7 +66,7 @@ async function getAllStreams(member_id) {
  * @returns array of new stream IDs
  */
 async function getNewStreams(member_id) {
-    // let current_stream_id_list = await getOldStreams(member_id);
+    // let current_stream_id_list = await getStreamsFromFile(member_id);
     let current_stream_id_list = await getAllStreams(member_id);
     let new_stream_id_list = [];
     for (let stream_id of current_stream_id_list) {
@@ -75,6 +75,30 @@ async function getNewStreams(member_id) {
         }
     }
     return new_stream_id_list;
+}
+
+
+
+/**
+ * Gets stream list from HTML file (for manual updating) - BE CAREFUL WITH THIS
+ * @param {String} member_id - member's ID, in snake-case
+ * @param {String} file_name - HTML file name of video listing page
+ * @returns - array of YouTube video/stream IDs
+ */
+ async function getStreamsFromFile(member_id, file_name) {
+    let stream_id_list = [];
+    let member = await Member.findOne({id: member_id});
+    return new Promise (async (resolve, reject) => {
+        yt_id = member.youtube_id;
+        let pyshell = new PythonShell('get_stream_list_manual.py', {mode: 'text', args: [yt_id, file_name]});
+        pyshell.on('message', function (id) {
+            stream_id_list.push(id);
+        });
+        pyshell.end(function (err) {
+            if (err) reject(err);
+            resolve(stream_id_list);
+        });
+    })
 }
 
 /**
@@ -225,7 +249,6 @@ async function updateMemberStreamsAndChat(member_id) {
  */
 async function updateAll(generation_id) {
     const member_array = await getAllMembers(generation_id);
-    for (let mem of member_array) {console.log(mem)}
     for (let member_id of member_array) {
         await updateMemberStreamsAndChat(member_id);
     }
