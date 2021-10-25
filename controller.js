@@ -97,7 +97,7 @@ async function getChartData(req, res) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     const { member_id, stream_id } = req.params;
     let stream = await Stream.findOne({id: stream_id});
-    let surround_stream_id_array = await getSurroundingStreams(member_id, stream_id);
+    let surround_stream_id_array = await getSurroundingStreams(member_id, stream_id, 7);
     let chart_data = await convertIntersectsToChartData(stream, surround_stream_id_array);
     // creating new data array for each other member to add to datasets
     final_chart_data = [];

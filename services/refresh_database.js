@@ -27,7 +27,7 @@ async function refreshIntersections() {
         let stream_id = stream.id;
         let stream_member_id = stream.member_id;
         // let other_stream_array = await Stream.find({id: {$ne: stream.id}, member_id: {$ne: stream.member_id}});
-        let other_stream_array = await getSurroundingStreams(stream_member_id, stream_id);
+        let other_stream_array = await getSurroundingStreams(stream_member_id, stream_id, 7);
         for (let other_stream of other_stream_array) {
             let other_stream_id = other_stream.id;
             let other_stream_member_id = other_stream.member_id;

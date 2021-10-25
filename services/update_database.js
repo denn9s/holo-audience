@@ -7,8 +7,7 @@ const Chat = require('../models/chat');
 const MemberUpdate = require('../models/update');
 const Intersection = require('../models/intersection');
 
-const {getStreamDetails} = require('../stream_data');
-const {getCredentials} = require('../stream_data');
+const {getStreamDetails, getCredentials} = require('../stream_data');
 const {getSurroundingStreams} = require('./update_helper');
 
 const credentials = getCredentials();
@@ -77,8 +76,6 @@ async function getNewStreams(member_id) {
     }
     return new_stream_id_list;
 }
-
-
 
 /**
  * Gets stream list from HTML file (for manual updating) - BE CAREFUL WITH THIS
@@ -233,7 +230,7 @@ async function updateMemberStreamsAndChat(member_id) {
         if (chat.success === true) {
             await addNewStream(member_id, stream_id, stream_details, chat.chatter_count);
             // let other_stream_array = await Stream.find({id: {$ne: stream_id}, member_id: {$ne: member_id}});
-            let other_stream_array = await getSurroundingStreams(member_id, stream_id);
+            let other_stream_array = await getSurroundingStreams(member_id, stream_id, 7);
             for (let stream of other_stream_array) {
                 await addIntersection(stream_id, member_id, stream.id, stream.member_id);
             }
