@@ -9,6 +9,7 @@ const Intersection = require('../models/intersection');
 
 const {getStreamDetails} = require('../stream_data');
 const {getCredentials} = require('../stream_data');
+const {getSurroundingStreams} = require('./update_helper');
 
 const credentials = getCredentials();
 // mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -231,7 +232,8 @@ async function updateMemberStreamsAndChat(member_id) {
         let chat = await addChatData(stream_id, member_id);
         if (chat.success === true) {
             await addNewStream(member_id, stream_id, stream_details, chat.chatter_count);
-            let other_stream_array = await Stream.find({id: {$ne: stream_id}, member_id: {$ne: member_id}});
+            // let other_stream_array = await Stream.find({id: {$ne: stream_id}, member_id: {$ne: member_id}});
+            let other_stream_array = await getSurroundingStreams(member_id, stream_id);
             for (let stream of other_stream_array) {
                 await addIntersection(stream_id, member_id, stream.id, stream.member_id);
             }
@@ -253,3 +255,5 @@ async function updateAll(generation_id) {
         await updateMemberStreamsAndChat(member_id);
     }
 }
+
+// test("ouro_kronii", "lYpfa4-A13o");

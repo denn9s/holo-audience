@@ -1,5 +1,26 @@
+
 const Intersection = require('./models/intersection');
 const Stream = require('./models/stream');
+
+/**
+ * 
+ * @param {Object} stream - Stream object from MongoDB
+ * @param {Array} other_stream_array - array of surrounding Stream objects from MongoDB
+ * @returns Array of chart data objects that contain coordinates and member names
+ */
+ async function convertIntersectsToChartData(stream, other_stream_array) {
+    let chart_data = []
+    for (let other_stream of other_stream_array) {
+        let intersect = await Intersection.findOne({first_stream_id: stream.id, second_stream_id: other_stream.id});
+        if (intersect === null) {
+            intersect = await Intersection.findOne({first_stream_id: other_stream.id, second_stream_id: stream.id});
+        }
+        const other_stream_date = new Date(other_stream.times.actual_start_time);
+        const data = {x: other_stream_date.toString(), y: intersect.common_count, other_member_id: other_stream.member_id, other_stream_id: other_stream.id, other_stream_title: other_stream.title};
+        chart_data.push(data);
+    }
+    return chart_data;
+}
 
 /**
  * Gets surrounding stream IDs (+/- 7 days)
@@ -21,26 +42,5 @@ const Stream = require('./models/stream');
     return [];
 }
 
-/**
- * 
- * @param {Object} stream - Stream object from MongoDB
- * @param {Array} other_stream_array - array of surrounding Stream objects from MongoDB
- * @returns Array of chart data objects that contain coordinates and member names
- */
-async function convertIntersectsToChartData(stream, other_stream_array) {
-    let chart_data = []
-    for (let other_stream of other_stream_array) {
-        let intersect = await Intersection.findOne({first_stream_id: stream.id, second_stream_id: other_stream.id});
-        if (intersect === null) {
-            intersect = await Intersection.findOne({first_stream_id: other_stream.id, second_stream_id: stream.id});
-        }
-        const other_stream_date = new Date(other_stream.times.actual_start_time);
-        const data = {x: other_stream_date.toString(), y: intersect.common_count, other_member_id: other_stream.member_id, other_stream_id: other_stream.id, other_stream_title: other_stream.title};
-        chart_data.push(data);
-    }
-    return chart_data;
-}
-
-
-exports.getSurroundingStreams = getSurroundingStreams;
 exports.convertIntersectsToChartData = convertIntersectsToChartData;
+exports.getSurroundingStreams = getSurroundingStreams;
