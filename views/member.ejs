@@ -26,12 +26,12 @@
         <div class="row">
             <div class="col">
                 <div class="text-right dropdown show sort-dropdown float-end">
-                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By</button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a id="title_sort" class="dropdown-item" href="#">Title (A to Z)</a>
-                    <a id="title_sort_backwards" class="dropdown-item" href="#">Title (Z to A)</a>
-                    <a id="date_sort" class="dropdown-item" href="#">Date (Oldest to Newest)</a>
-                    <a id="date_sort_backwards" class="dropdown-item" href="#">Date (Newest to Oldest)</a>
+                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="sort_dropdown_button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By</button>
+                    <div class="dropdown-menu">
+                        <a id="title_sort_button" class="dropdown-item" href="#">Title (A to Z)</a>
+                        <a id="title_sort_backwards_button" class="dropdown-item" href="#">Title (Z to A)</a>
+                        <a id="date_sort_button" class="dropdown-item" href="#">Date (Oldest to Newest)</a>
+                        <a id="date_sort_backwards_button" class="dropdown-item" href="#">Date (Newest to Oldest)</a>
                     </div>
                 </div>
             </div>
@@ -205,17 +205,36 @@
 
     <script>
         $stream_card_divs = $('div.stream-card-col');
+        $sort_button = $('#sort_dropdown_button');
 
-        $('#title_sort').on('click', function () {
+        $('#title_sort_button').on('click', function () {
+            $sort_button.text(this.innerText);
             var sortedDivs = $stream_card_divs.sort(function (a, b) {
                 return $(a).find('h6.stream-card-header').text() > $(b).find('h6.stream-card-header').text()
             });
             $('#stream_card_row').html(sortedDivs);
         });
 
-        $('#title_sort_backwards').on('click', function () {
+        $('#title_sort_backwards_button').on('click', function () {
+            $sort_button.text(this.innerText);
             var sortedDivs = $stream_card_divs.sort(function (a, b) {
                 return $(a).find('h6.stream-card-header').text() < $(b).find('h6.stream-card-header').text()
+            });
+            $('#stream_card_row').html(sortedDivs);
+        });
+
+        $('#date_sort_button').on('click', function () {
+            $sort_button.text(this.innerText);
+            var sortedDivs = $stream_card_divs.sort(function (a, b) {
+                return Date.parse($(a).find('a.stream-card-btn').text()) > Date.parse($(b).find('a.stream-card-btn').text())
+            });
+            $('#stream_card_row').html(sortedDivs);
+        });
+
+        $('#date_sort_backwards_button').on('click', function () {
+            $sort_button.text(this.innerText);
+            var sortedDivs = $stream_card_divs.sort(function (a, b) {
+                return Date.parse($(a).find('a.stream-card-btn').text()) < Date.parse($(b).find('a.stream-card-btn').text())
             });
             $('#stream_card_row').html(sortedDivs);
         });
