@@ -28,16 +28,18 @@
                 <div class="text-right dropdown show sort-dropdown float-end">
                     <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By</button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="#">Title</a>
-                    <a class="dropdown-item" href="#">Date</a>
+                    <a id="title_sort" class="dropdown-item" href="#">Title (A to Z)</a>
+                    <a id="title_sort_backwards" class="dropdown-item" href="#">Title (Z to A)</a>
+                    <a id="date_sort" class="dropdown-item" href="#">Date (Oldest to Newest)</a>
+                    <a id="date_sort_backwards" class="dropdown-item" href="#">Date (Newest to Oldest)</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div id="stream_card_row" class="row">
             <% all_streams.sort((a,b) => (b.times.actual_start_time > a.times.actual_start_time) ? 1 : ((a.times.actual_start_time > b.times.actual_start_time) ? -1 : 0)) %>
             <% for (let stream of all_streams) { %>
-                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="stream-card-col col-lg-3 col-md-4 col-sm-6 col-12">
                     <div class="stream-card card text-center border-dark"> 
                         <img class="card-stream-thumbnail card-img" src="<%= stream.thumbnail_url %>">
                         <div class="card-img-overlay">
@@ -45,7 +47,7 @@
                                 <h6 class="stream-card-header card-subtitle mb-2 crop-text-3" id="header_<%=stream.id%>"><%= stream.title %></h6>
                                 <% let date_options = {year: 'numeric', month: 'short', day: 'numeric' }; %>
                                 <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
-                                <a class="btn btn-info w-100 stretched-link" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
+                                <a class="stream-card-btn btn btn-info w-100 stretched-link" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
                             </div>
                         </div>
                     </div>
@@ -199,6 +201,24 @@
                 window.location.href = `http://localhost:3000/${member_id}/${stream_id}`;
             }
         };
+    </script>
+
+    <script>
+        $stream_card_divs = $('div.stream-card-col');
+
+        $('#title_sort').on('click', function () {
+            var sortedDivs = $stream_card_divs.sort(function (a, b) {
+                return $(a).find('h6.stream-card-header').text() > $(b).find('h6.stream-card-header').text()
+            });
+            $('#stream_card_row').html(sortedDivs);
+        });
+
+        $('#title_sort_backwards').on('click', function () {
+            var sortedDivs = $stream_card_divs.sort(function (a, b) {
+                return $(a).find('h6.stream-card-header').text() < $(b).find('h6.stream-card-header').text()
+            });
+            $('#stream_card_row').html(sortedDivs);
+        });
     </script>
 </body>
 </html>
