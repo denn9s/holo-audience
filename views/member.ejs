@@ -67,9 +67,10 @@
                             <div class="card-img-overlay">
                                 <div class="card-body">
                                     <h6 class="stream-card-header card-subtitle mb-2 crop-text-3" id="header_<%=stream.id%>"><%= stream.title %></h6>
-                                    <% let date_options = {year: 'numeric', month: 'short', day: 'numeric' }; %>
+                                    <% let date_options = {year: 'numeric', month: 'short', day: 'numeric'}; %>
                                     <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
-                                    <a class="stream-card-btn btn btn-info w-100 stretched-link" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
+                                    <% let formatted_card_date_data = new Date(stream.times.actual_start_time) %>
+                                    <a class="stream-card-btn btn btn-info w-100 stretched-link" id="<%=stream.id%>" data-date="<%=formatted_card_date_data%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +158,7 @@
         });
     </script>
 
-    <script type="text/javascript">
+    <script>
         async function updateChart(stream_id) {
             let stream_header = document.getElementById(`header_${stream_id}`)
             $(window).scrollTop(0);
@@ -186,7 +187,6 @@
             updateChart('<%=stream_id%>')
         }
 
-        
         common_chart.options.plugins.legend.onHover = function(x, y, z) {
             for (let index in common_chart.data.datasets) {
                 index = parseInt(index);
@@ -249,7 +249,7 @@
         $('#date_sort_button').on('click', function () {
             $sort_button.text(this.innerText);
             var sortedDivs = $stream_card_divs.sort(function (a, b) {
-                return Date.parse($(a).find('a.stream-card-btn').text()) > Date.parse($(b).find('a.stream-card-btn').text())
+                return Date.parse($(a).find('a.stream-card-btn').attr('data-date')) > Date.parse($(b).find('a.stream-card-btn').attr('data-date'))
             });
             $('#stream_card_row').html(sortedDivs);
         });
@@ -257,7 +257,7 @@
         $('#date_sort_backwards_button').on('click', function () {
             $sort_button.text(this.innerText);
             var sortedDivs = $stream_card_divs.sort(function (a, b) {
-                return Date.parse($(a).find('a.stream-card-btn').text()) < Date.parse($(b).find('a.stream-card-btn').text())
+                return Date.parse($(a).find('a.stream-card-btn').attr('data-date')) < Date.parse($(b).find('a.stream-card-btn').attr('data-date'))
             });
             $('#stream_card_row').html(sortedDivs);
         });
