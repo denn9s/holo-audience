@@ -14,47 +14,70 @@
     <!-- Style Stuff -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet"> 
     <link href= "/assets/member.css" rel="stylesheet" />
+
+    <title> <%= member_name %></title>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="d-md-flex d-block flex-row mx-md-auto mx-0">
-            <a class="navbar-brand" href="#"><%= member_name %></a>
-        </div>
-    </nav>
-    <canvas id="common_chart_canvas"></canvas>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div class="text-right dropdown show sort-dropdown float-end">
-                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="sort_dropdown_button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By</button>
-                    <div class="dropdown-menu">
-                        <a id="title_sort_button" class="dropdown-item" href="#">Title (A to Z)</a>
-                        <a id="title_sort_backwards_button" class="dropdown-item" href="#">Title (Z to A)</a>
-                        <a id="date_sort_button" class="dropdown-item" href="#">Date (Oldest to Newest)</a>
-                        <a id="date_sort_backwards_button" class="dropdown-item" href="#">Date (Newest to Oldest)</a>
-                    </div>
-                </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="mx-auto order-0">
+                <a class="navbar-brand mx-auto" href="#"><%= member_name %></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".dual-collapse2">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/denn9s/holo-audience">About</a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div id="stream_card_row" class="row">
-            <% all_streams.sort((a,b) => (b.times.actual_start_time > a.times.actual_start_time) ? 1 : ((a.times.actual_start_time > b.times.actual_start_time) ? -1 : 0)) %>
-            <% for (let stream of all_streams) { %>
-                <div class="stream-card-col col-lg-3 col-md-4 col-sm-6 col-12">
-                    <div class="stream-card card text-center border-dark"> 
-                        <img class="card-stream-thumbnail card-img" src="<%= stream.thumbnail_url %>">
-                        <div class="card-img-overlay">
-                            <div class="card-body">
-                                <h6 class="stream-card-header card-subtitle mb-2 crop-text-3" id="header_<%=stream.id%>"><%= stream.title %></h6>
-                                <% let date_options = {year: 'numeric', month: 'short', day: 'numeric' }; %>
-                                <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
-                                <a class="stream-card-btn btn btn-info w-100 stretched-link" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
-                            </div>
+    </nav>
+    <main>
+        <canvas id="common_chart_canvas"></canvas>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="text-right dropdown show sort-dropdown float-end">
+                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="sort_dropdown_button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By</button>
+                        <div class="dropdown-menu">
+                            <a id="title_sort_button" class="dropdown-item" href="#">Title (A to Z)</a>
+                            <a id="title_sort_backwards_button" class="dropdown-item" href="#">Title (Z to A)</a>
+                            <a id="date_sort_button" class="dropdown-item" href="#">Date (Oldest to Newest)</a>
+                            <a id="date_sort_backwards_button" class="dropdown-item" href="#">Date (Newest to Oldest)</a>
                         </div>
                     </div>
                 </div>
-            <% } %>
+            </div>
+            <div id="stream_card_row" class="row">
+                <% all_streams.sort((a,b) => (b.times.actual_start_time > a.times.actual_start_time) ? 1 : ((a.times.actual_start_time > b.times.actual_start_time) ? -1 : 0)) %>
+                <% for (let stream of all_streams) { %>
+                    <div class="stream-card-col col-lg-3 col-md-4 col-sm-6 col-12">
+                        <div class="stream-card card text-center border-dark"> 
+                            <img class="card-stream-thumbnail card-img" src="<%= stream.thumbnail_url %>">
+                            <div class="card-img-overlay">
+                                <div class="card-body">
+                                    <h6 class="stream-card-header card-subtitle mb-2 crop-text-3" id="header_<%=stream.id%>"><%= stream.title %></h6>
+                                    <% let date_options = {year: 'numeric', month: 'short', day: 'numeric' }; %>
+                                    <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
+                                    <a class="stream-card-btn btn btn-info w-100 stretched-link" id="<%=stream.id%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
         </div>
-    </div>
+    </main>
 
     <script>
         var chart_element = document.getElementById('common_chart_canvas');
