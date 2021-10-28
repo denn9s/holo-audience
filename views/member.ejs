@@ -62,7 +62,7 @@
                 <% all_streams.sort((a,b) => (b.times.actual_start_time > a.times.actual_start_time) ? 1 : ((a.times.actual_start_time > b.times.actual_start_time) ? -1 : 0)) %>
                 <% for (let stream of all_streams) { %>
                     <div class="stream-card-col col-lg-3 col-md-4 col-sm-6 col-12">
-                        <div class="stream-card card text-center border-dark"> 
+                        <div id="<%=stream.id%>_card" class="stream-card card text-center border-dark"> 
                             <img class="card-stream-thumbnail card-img" src="<%= stream.thumbnail_url %>">
                             <div class="card-img-overlay">
                                 <div class="card-body">
@@ -159,7 +159,30 @@
     </script>
 
     <script>
+        let most_recent_card_id = '';
+        var style = getComputedStyle(document.body);
+
+        async function clearBorder(stream_id) {
+            let card_id = `${stream_id}_card`;
+            let card = document.getElementById(card_id);
+            card.classList.add('border-dark');
+            card.style.border = '';
+        }
+
+        async function highlightBorder(stream_id) {
+            let card_id = `${stream_id}_card`;
+            let card = document.getElementById(card_id);
+            card.classList.remove('border-dark');
+            card.style.border = `3px solid ${style.getPropertyValue('--bs-info')}`;
+        }
+
         async function updateChart(stream_id) {
+            if (most_recent_card_id !== '') {
+                clearBorder(most_recent_card_id);
+            }
+            most_recent_card_id = stream_id;
+            highlightBorder(stream_id);
+
             let stream_header = document.getElementById(`header_${stream_id}`)
             $(window).scrollTop(0);
             $.ajax({
