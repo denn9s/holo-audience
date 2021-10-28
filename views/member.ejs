@@ -70,7 +70,7 @@
                                     <% let date_options = {year: 'numeric', month: 'short', day: 'numeric'}; %>
                                     <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
                                     <% let formatted_card_date_data = new Date(stream.times.actual_start_time) %>
-                                    <a class="stream-card-btn btn btn-info w-100 stretched-link" id="<%=stream.id%>" data-date="<%=formatted_card_date_data%>" onClick="updateChart(this.id)"><%= formatted_card_date %></a>
+                                    <a class="stream-card-btn btn btn-info w-100 stretched-link" data-stream="<%=stream.id%>" data-date="<%=formatted_card_date_data%>" onClick="updateChart(this.getAttribute('data-stream'))"><%= formatted_card_date %></a>
                                 </div>
                             </div>
                         </div>
