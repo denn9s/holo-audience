@@ -9,6 +9,10 @@ body {
     background-color: rgb(201, 201, 201);
 }
 
+.generation-header {
+    text-transform: capitalize;
+}
+
 .member-card {
     min-width: 10rem;
     margin: 1rem;

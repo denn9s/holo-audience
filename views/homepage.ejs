@@ -62,6 +62,10 @@
                     new_column.setAttribute('id', `${member.group_data.generation_name}_col`)
                     new_column.classList.add('col-md-4', 'col-12');
                     member_row.appendChild(new_column);
+                    const new_header = document.createElement('p');
+                    new_header.classList.add('h3', 'text-center', 'generation-header');
+                    new_header.textContent = `${member.group_data.generation_name}`.replace('_', ' ');
+                    new_column.appendChild(new_header);
                 }
                 const member_card = document.createElement('div');
                 member_card.classList.add('card', 'member-card', 'text-center', 'border-dark');
