@@ -1,13 +1,14 @@
 # Holo Audience
 
-This repository contains the source code for [(link added later)](https://github.com/denn9s/holo-audience), minus a few private things.
+This repository contains the source code for [(link added later)](), minus a few private things.
 
 ## Description
 
 (description added later)
 
-## Dependencies
+## Dependencies and Libraries
 
+### Back-end
 * Node.js (14.17.5)
     * Axios (0.21.4)
     * EJS (3.1.6)
@@ -18,6 +19,11 @@ This repository contains the source code for [(link added later)](https://github
     * Beautiful Soup (4.10.0)
     * [chat-downloader](https://github.com/xenova/chat-downloader) (0.1.10)
 * MongoDB (4.4.10)
+
+### Front-end
+* [Chart.js](https://www.chartjs.org/) (5.1.3)
+* [Bootstrap](https://getbootstrap.com/) (3.5.1)
+* [jQuery](https://jquery.com/) (3.6.0)
 
 ## Acknowledgments
 
