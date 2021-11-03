@@ -143,7 +143,9 @@
                             footer: function(ctx) {
                                 let count_array = []
                                 for (let point of ctx) {
-                                    count_array.push(`Common Viewers: ${point.formattedValue}`)
+                                    let dataset_index = point.dataIndex;
+                                    count_array.push(`Common Chatters: ${point.formattedValue}`);
+                                    count_array.push(`Total Chatters: ${(point.dataset.data[dataset_index].viewer_count).toLocaleString()}`)
                                 }
                                 return count_array
                             },
