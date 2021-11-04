@@ -4,7 +4,6 @@ const {PythonShell} = require('python-shell');
 const Member = require('../models/member');
 const Stream = require('../models/stream');
 const Chat = require('../models/chat');
-const MemberUpdate = require('../models/update');
 const Intersection = require('../models/intersection');
 
 const {getStreamDetails, getCredentials} = require('../stream_data');
@@ -199,25 +198,6 @@ async function addIntersection(first_stream_id, first_stream_member, second_stre
     }
 }
 
-
-/**
- * Adds most recent update data to database
- * @param {String} member_id - member's ID, in snake-case
- */
-async function addMemberUpdate(member_id) {
-    let stream_count = await Stream.countDocuments({member_id: member_id});
-    let latest_streams = await Stream.find().sort({"times.actual_start_time": -1}).limit(1);
-    let latest_stream = latest_streams[0];
-    const update = {total_videos: stream_count,
-                    most_recent_video_id: latest_stream.id, 
-                    most_recent_video_date: latest_stream.times.actual_start_time};
-    const member_update = await MemberUpdate.findOneAndUpdate({member_id: member_id}, update);
-    await member_update.save(function (err, res) {
-        if (err) return console.log(err);
-        console.log(`Added to MemberUpdate DB - ID:${res.most_recent_video_id} for Member: ${res.member_id} on Date: ${res.most_recent_video_date}\n`);      
-    });
-}
-
 /**
  * Adds new streams and chat to relevant databases for a single member
  * @param {String} member_id - member's ID, in snake-case
@@ -238,8 +218,6 @@ async function updateMemberStreamsAndChat(member_id) {
             console.log("ERROR! Live chat was not available!");
         }
     }
-    const latestStream = (await Stream.find({member_id: member_id}).sort({'times.actual_start_time': -1}).limit(1))[0];
-    await addMemberUpdate(member_id, latestStream.id, latestStream.times.actual_start_time);
 }
 
 /**
@@ -252,5 +230,3 @@ async function updateAll(generation_id) {
         await updateMemberStreamsAndChat(member_id);
     }
 }
-
-// test("ouro_kronii", "lYpfa4-A13o");
