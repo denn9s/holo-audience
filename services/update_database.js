@@ -65,7 +65,7 @@ async function getAllStreams(member_id) {
  * @returns array of new stream IDs
  */
 async function getNewStreams(member_id) {
-    // let current_stream_id_list = await getStreamsFromFile(member_id);
+    // let current_stream_id_list = await getStreamsFromFile(member_id, 'file_name');
     let current_stream_id_list = await getAllStreams(member_id);
     let new_stream_id_list = [];
     for (let stream_id of current_stream_id_list) {
@@ -128,19 +128,25 @@ async function getNewStreams(member_id) {
  * @param {Object} stream_details - details of stream (i.e. stream ID, thumbnails)
  */
 async function addNewStream(member_id, stream_id, stream_details, chatter_count) {
-    const stream = new Stream({id: stream_id, member_id: member_id,
-        title: stream_details.stream_title,
-        thumbnail_url: stream_details.thumbnail_url,
-        unique_viewer_count: chatter_count,
-        times: {
-            actual_start_time: stream_details.stream_time_data.actual_start_time,
-            actual_end_time: stream_details.stream_time_data.actual_end_time,
-            scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
+    let success = true;
+    try {
+        const stream = new Stream({id: stream_id, member_id: member_id,
+            title: stream_details.stream_title,
+            thumbnail_url: stream_details.thumbnail_url,
+            unique_viewer_count: chatter_count,
+            times: {
+                actual_start_time: stream_details.stream_time_data.actual_start_time,
+                actual_end_time: stream_details.stream_time_data.actual_end_time,
+                scheduled_start_time: stream_details.stream_time_data.scheduled_start_time
         }});
-    await stream.save(function (err, res) {
-        if (err) return console.log(err);
-        console.log(`Added to Stream DB - ID: ${res.id} for Member: ${res.member_id}`);
-    });
+        let saved_stream = await stream.save();
+        console.log(`Added to Stream DB - ID: ${saved_stream.id} for Member: ${saved_stream.member_id}`);
+        return success;
+    } catch (err) {
+        console.log(err);
+        success = false;
+        return success;
+    }
 }
 
 /**
@@ -189,6 +195,7 @@ async function addIntersection(first_stream_id, first_stream_member, second_stre
                 common_count: common_chatter_count});
             await intersection.save(function(err, res) {
                 if (err) return console.log(err);
+                // console.log(`Added intersection of ${res.first_stream_id} (${res.first_stream_member_id}) and ${res.second_stream_id} (${res.second_stream_member_id}) - ${res.common_count}`);
             })
         } else {
             console.log('ERROR: Intersection already exists.');
@@ -204,15 +211,16 @@ async function addIntersection(first_stream_id, first_stream_member, second_stre
  */
 async function updateMemberStreamsAndChat(member_id) {
     const new_stream_array = await getNewStreams(member_id);
-    for (let stream_id of new_stream_array) {
+    for (let stream_id of new_stream_array.reverse()) {
         const stream_details = await getStreamDetails(stream_id);
         let chat = await addChatData(stream_id, member_id);
         if (chat.success === true) {
-            await addNewStream(member_id, stream_id, stream_details, chat.chatter_count);
-            // let other_stream_array = await Stream.find({id: {$ne: stream_id}, member_id: {$ne: member_id}});
-            let other_stream_array = await getSurroundingStreams(member_id, stream_id, 7);
-            for (let stream of other_stream_array) {
-                await addIntersection(stream_id, member_id, stream.id, stream.member_id);
+            let stream_add_success = await addNewStream(member_id, stream_id, stream_details, chat.chatter_count);
+            if (stream_add_success === true) {
+                let other_stream_array = await getSurroundingStreams(member_id, stream_id, 7);
+                for (let stream of other_stream_array) {
+                    await addIntersection(stream_id, member_id, stream.id, stream.member_id);
+                }
             }
         } else {
             console.log("ERROR! Live chat was not available!");
@@ -230,3 +238,5 @@ async function updateAll(generation_id) {
         await updateMemberStreamsAndChat(member_id);
     }
 }
+
+updateMemberStreamsAndChat('ouro_kronii');
