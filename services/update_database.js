@@ -156,6 +156,10 @@ async function addNewStream(member_id, stream_id, stream_details, chatter_count)
  * @returns Boolean indicating success or failure
  */
 async function addChatData(stream_id, member_id) {
+    let possible_chat = await Chat.findOne({stream_id: stream_id});
+    if (possible_chat !== null) {
+        return {success: true, chatter_count: possible_chat.unique_chatter_count};
+    }
     let stream_data = await getChatData(stream_id);
     let chatter_count = 0;
     if (stream_data.success === 1) {
