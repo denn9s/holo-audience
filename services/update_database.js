@@ -129,6 +129,10 @@ async function getNewStreams(member_id) {
  */
 async function addNewStream(member_id, stream_id, stream_details, chatter_count) {
     let success = true;
+    let possible_stream = await Stream.findOne({id: stream_id});
+    if (possible_stream !== null) {
+        return success;
+    }
     try {
         const stream = new Stream({id: stream_id, member_id: member_id,
             title: stream_details.stream_title,
@@ -242,5 +246,3 @@ async function updateAll(generation_id) {
         await updateMemberStreamsAndChat(member_id);
     }
 }
-
-updateMemberStreamsAndChat('ouro_kronii');
