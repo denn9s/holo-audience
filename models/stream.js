@@ -9,7 +9,7 @@ const Stream = new mongoose.Schema({
     times: {
         actual_start_time: { type: Date, required: true }, 
         actual_end_time: { type: Date, required: true },
-        scheduled_start_time: {type: Date, required: true}
+        scheduled_start_time: {type: Date, required: false}
     }
 });
 
