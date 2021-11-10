@@ -102,7 +102,7 @@ async function getChartData(req, res) {
     // creating new data array for each other member to add to datasets
     final_chart_data = [];
     for (let item of chart_data) {
-        // checking of label exists
+        // checking if label exists
         if (final_chart_data.some(x => x.label === item.other_member_id)) {
             for (let index in final_chart_data) {
                 if (final_chart_data[index].label === item.other_member_id) {
@@ -116,9 +116,8 @@ async function getChartData(req, res) {
                 label: item.other_member_id,
                 stream_member: current_member.name,
                 data: [],
-                // showLine: true,
-                // borderWidth: 1,
-                // borderColor: `rgba(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue}, 0.4)`,
+                borderWidth: 1,
+                borderColor: `rgba(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue}, 0.4)`,
                 radius: 5,
                 backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`
             }
