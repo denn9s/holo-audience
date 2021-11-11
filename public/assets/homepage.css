@@ -1,5 +1,6 @@
 body {
     font-family: 'Fira Sans', sans-serif !important;
+    background-color: rgb(25, 25, 25);
 }
 
 .homepage-description {
@@ -18,6 +19,20 @@ body {
     margin: 1rem;
     padding-left: 2rem;
     padding-right: 2rem;
+    background-color: rgb(75, 75, 75);
+}
+
+.generation-header {
+    color: rgb(255, 255, 255);
+}
+
+.card-title {
+    color: rgb(255, 255, 255);
+}
+
+.viewer-count-button {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
 }
 
 .member-card:hover {

@@ -75,7 +75,7 @@
                 member_card_title.classList.add('card-title');
                 member_card_title.textContent = member.name;
                 const member_card_link = document.createElement('a');
-                member_card_link.classList.add('btn', 'btn-info', 'stretched-link');
+                member_card_link.classList.add('btn', 'btn-link', 'stretched-link', 'viewer-count-button');
                 member_card_link.setAttribute('href', `/${member.id}`);
                 member_card_link.textContent = 'click me pls';
                 member_card_body.appendChild(member_card_title);
