@@ -234,6 +234,9 @@ async function updateMemberStreamsAndChat(member_id) {
             console.log("ERROR! Live chat was not available!");
         }
     }
+    let new_stream_count = await Stream.countDocuments({member_id: member_id});
+    let current_member = await Member.findOneAndUpdate({id: member_id}, {total_streams: new_stream_count});
+    console.log(`Updated stream count for ${member_id}: ${current_member.total_streams} ---> ${new_stream_count}`);
 }
 
 /**
