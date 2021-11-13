@@ -1,13 +1,17 @@
 body {
     font-family: 'Fira Sans', sans-serif !important;
-    background-color: rgb(25, 25, 25);
+    background-color: rgb(18, 18, 18);
+}
+
+.navbar-title {
+    color: rgba(255, 2, 255, 0.87);
 }
 
 #common_chart_canvas {
     margin: 1.5rem;
     margin-bottom: 0.5rem;
     min-height:250px;
-    max-height:500px;
+    max-height:600px;
 }
 
 .sort-dropdown {
@@ -20,6 +24,7 @@ body {
     padding: 0px;
     border-width: 2px;
     background-color: rgb(0, 0, 0);
+    overflow: hidden;
 }
 
 .stream-card:hover {
@@ -48,7 +53,7 @@ body {
     height: 10rem;
     object-fit: cover;
     display: block;
-    filter: blur(1px);
+    filter: blur(4px);
     width: 100%;
 }
 

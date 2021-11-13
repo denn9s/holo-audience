@@ -106,7 +106,11 @@
                                 let formatted_date = new Date(value).toLocaleString('en-US', options);
                                 return formatted_date;
                             },
-                            color: 'white',
+                            color: 'rgba(255, 255, 255, 0.6)',
+                            font: {
+                                size: 14,
+                                family: 'Fira Sans',
+                            },
                         },
                         grid: {
                             color: 'rgba(210, 210, 210, 0.1)',
@@ -115,8 +119,12 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
+                            font: {
+                                size: 14,
+                                family: 'Fira Sans',
+                            },
                             display: false,
-                            color: 'white',
+                            color: 'rgba(255, 255, 255, 0.6)',
                         },
                         grid: {
                             color: 'rgba(210, 210, 210, 0.1)',
@@ -129,15 +137,19 @@
                         text: '<%= stream_title %>',
                         font: {
                             family: 'Fira Sans',
-                            size: 20,
+                            size: 28,
                             weight: 'bold'
                         },
-                        color: 'rgba(255, 255, 255, 1)'
+                        color: 'rgba(255, 255, 255, 0.87)'
                     },
                     legend: {
                         display: false,
                         labels: {
-                            color: 'rgba(255, 255, 255, 1)'
+                            font: {
+                                size: 14,
+                                family: 'Fira Sans',
+                            },
+                            color: 'rgba(255, 255, 255, 0.87)'
                         }
                     },
                     tooltip: {
