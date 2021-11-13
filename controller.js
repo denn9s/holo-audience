@@ -117,8 +117,8 @@ async function getChartData(req, res) {
                 label: item.other_member_id,
                 stream_member: current_member.name,
                 data: [],
-                borderWidth: 1,
-                borderColor: `rgba(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue}, 0.4)`,
+                borderWidth: 1.5,
+                borderColor: `rgba(${current_member.color.red + 75}, ${current_member.color.green + 75}, ${current_member.color.blue + 75})`,
                 radius: 5,
                 backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`
             }

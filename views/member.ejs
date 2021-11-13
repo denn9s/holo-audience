@@ -145,6 +145,12 @@
                     legend: {
                         display: false,
                         labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            sort: function(a, b, data) {
+                                if (a.text > b.text) return 1;
+                                else return -1;
+                            },
                             font: {
                                 size: 14,
                                 family: 'Fira Sans',
