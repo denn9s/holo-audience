@@ -70,7 +70,7 @@
                                     <% let date_options = {year: 'numeric', month: 'short', day: 'numeric'}; %>
                                     <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
                                     <% let formatted_card_date_data = new Date(stream.times.actual_start_time) %>
-                                    <a class="stream-card-btn btn btn-info w-100 stretched-link" data-stream="<%=stream.id%>" data-date="<%=formatted_card_date_data%>" onClick="updateChart(this.getAttribute('data-stream'))"><%= formatted_card_date %></a>
+                                    <a class="stream-card-btn btn btn-secondary w-100 stretched-link" data-stream="<%=stream.id%>" data-date="<%=formatted_card_date_data%>" onClick="updateChart(this.getAttribute('data-stream'))"><%= formatted_card_date %></a>
                                 </div>
                             </div>
                         </div>
@@ -99,17 +99,28 @@
                 responsive: true,
                 scales: {
                     x: {
-                        display: false,
                         ticks: {
+                            display: false,
                             callback: function(value, index, values) {
                                 let options = {year: 'numeric', month: 'numeric', day: 'numeric' };
                                 let formatted_date = new Date(value).toLocaleString('en-US', options);
                                 return formatted_date;
-                            }
+                            },
+                            color: 'white',
+                        },
+                        grid: {
+                            color: 'rgba(210, 210, 210, 0.1)',
                         }
                     },
                     y: {
                         beginAtZero: true,
+                        ticks: {
+                            display: false,
+                            color: 'white',
+                        },
+                        grid: {
+                            color: 'rgba(210, 210, 210, 0.1)',
+                        }
                     }
                 },
                 plugins: {
@@ -120,10 +131,14 @@
                             family: 'Fira Sans',
                             size: 20,
                             weight: 'bold'
-                        }
+                        },
+                        color: 'rgba(255, 255, 255, 1)'
                     },
                     legend: {
-                        display: false
+                        display: false,
+                        labels: {
+                            color: 'rgba(255, 255, 255, 1)'
+                        }
                     },
                     tooltip: {
                         enabled: true,
@@ -197,7 +212,8 @@
                         common_chart.data.datasets[i].data = [];
                     }
                     common_chart.data.datasets = data;
-                    common_chart.options.scales.x.display = true;
+                    common_chart.options.scales.x.ticks.display = true;
+                    common_chart.options.scales.y.ticks.display = true;
                     common_chart.options.plugins.legend.display = true;
                     common_chart.options.plugins.title.text = stream_header.textContent;
                     common_chart.update();
