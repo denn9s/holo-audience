@@ -28,7 +28,7 @@
                 </ul>
             </div>
             <div class="mx-auto order-0">
-                <a class="navbar-brand mx-auto" href="#"><%= member_name %></a>
+                <a class="navbar-brand mx-auto" href="https://www.youtube.com/channel/<%= member_youtube_id %>"><%= member_name %></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".dual-collapse2">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -70,7 +70,7 @@
                                     <% let date_options = {year: 'numeric', month: 'short', day: 'numeric'}; %>
                                     <% let formatted_card_date = new Date(stream.times.actual_start_time).toLocaleDateString("en-US", date_options) %>
                                     <% let formatted_card_date_data = new Date(stream.times.actual_start_time) %>
-                                    <a class="stream-card-btn btn btn-secondary w-100 stretched-link" data-stream="<%=stream.id%>" data-date="<%=formatted_card_date_data%>" onClick="updateChart(this.getAttribute('data-stream'))"><%= formatted_card_date %></a>
+                                    <a class="stream-card-btn btn btn-secondary w-100 stretched-link" id="button_<%=stream.id%>" data-chatters="<%=stream.unique_viewer_count%>" data-stream="<%=stream.id%>" data-date="<%=formatted_card_date_data%>" onClick="updateChart(this.getAttribute('data-stream'))"><%= formatted_card_date %></a>
                                 </div>
                             </div>
                         </div>
@@ -213,6 +213,7 @@
             highlightBorder(stream_id);
 
             let stream_header = document.getElementById(`header_${stream_id}`)
+            let viewer_count = $(`#button_${stream_id}`).attr('data-chatters');
             $(window).scrollTop(0);
             $.ajax({
                 url : `http://127.0.0.1:3000/api/chart/<%=member_id%>/${stream_id}`,
@@ -227,7 +228,7 @@
                     common_chart.options.scales.x.ticks.display = true;
                     common_chart.options.scales.y.ticks.display = true;
                     common_chart.options.plugins.legend.display = true;
-                    common_chart.options.plugins.title.text = stream_header.textContent;
+                    common_chart.options.plugins.title.text = `${stream_header.textContent} --- ${viewer_count} viewers`;
                     common_chart.update();
                 },
                 error : function(req, err) {
