@@ -30,6 +30,11 @@ body {
     color: rgb(255, 255, 255);
 }
 
+.member-card-img {
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
 .viewer-count-button {
     color: rgb(255, 255, 255);
     text-decoration: none;
