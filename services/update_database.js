@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const {PythonShell} = require('python-shell');
+const CronJob = require('cron').CronJob;
 
 const Member = require('../models/member');
 const Stream = require('../models/stream');
@@ -65,7 +66,7 @@ async function getAllStreams(member_id) {
  * @returns array of new stream IDs
  */
 async function getNewStreams(member_id) {
-    // let current_stream_id_list = await getStreamsFromFile(member_id, 'file_name');
+    // let current_stream_id_list = await getStreamsFromFile(member_id, 'moripage.htm');
     let current_stream_id_list = await getAllStreams(member_id);
     let new_stream_id_list = [];
     for (let stream_id of current_stream_id_list) {
@@ -249,3 +250,8 @@ async function updateAll(generation_id) {
         await updateMemberStreamsAndChat(member_id);
     }
 }
+// runs at 23:59 PST everyday
+let daily_update_job = new CronJob('0 59 23 * * *', async function() {
+    await updateAll('');
+}, null, true, 'America/Los_Angeles');
+daily_update_job.start();
