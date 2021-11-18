@@ -142,6 +142,15 @@
                         },
                         color: 'rgba(255, 255, 255, 0.87)'
                     },
+                    subtitle: {
+                        display: true,
+                        text: '',
+                        font: {
+                            family: 'Fira Sans',
+                            size: 20
+                        },
+                        color: 'rgba(255, 255, 255, 0.87)'
+                    },
                     legend: {
                         display: false,
                         labels: {
@@ -234,7 +243,8 @@
                     common_chart.options.scales.x.ticks.display = true;
                     common_chart.options.scales.y.ticks.display = true;
                     common_chart.options.plugins.legend.display = true;
-                    common_chart.options.plugins.title.text = `${stream_header.textContent} --- ${viewer_count} viewers`;
+                    common_chart.options.plugins.title.text = `${stream_header.textContent}`;
+                    common_chart.options.plugins.subtitle.text =  `${viewer_count} viewers`
                     common_chart.update();
                 },
                 error : function(req, err) {
