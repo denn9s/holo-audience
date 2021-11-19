@@ -244,7 +244,7 @@
                     common_chart.options.scales.y.ticks.display = true;
                     common_chart.options.plugins.legend.display = true;
                     common_chart.options.plugins.title.text = `${stream_header.textContent}`;
-                    common_chart.options.plugins.subtitle.text =  `${viewer_count} unique chatters`
+                    common_chart.options.plugins.subtitle.text =  `${parseInt(viewer_count).toLocaleString('en-US')} unique chatters`
                     common_chart.update();
                 },
                 error : function(req, err) {
