@@ -107,7 +107,11 @@ async function getChartData(req, res) {
         if (final_chart_data.some(x => x.label === item.other_member_id)) {
             for (let index in final_chart_data) {
                 if (final_chart_data[index].label === item.other_member_id) {
-                    final_chart_data[index].data.push({x: Date.parse(item.x), y: item.y, stream_id: item.other_stream_id, stream_title: item.other_stream_title, viewer_count: item.other_stream_chatter_count});
+                    final_chart_data[index].data.push({x: Date.parse(item.x), y: item.y, 
+                        stream_id: item.other_stream_id, 
+                        stream_title: item.other_stream_title, 
+                        viewer_count: item.other_stream_chatter_count,
+                        viewer_percentage: parseInt(item.y) / parseInt(item.other_stream_chatter_count)});
                     break;
                 }
             }
@@ -123,7 +127,11 @@ async function getChartData(req, res) {
                 backgroundColor: `rgb(${current_member.color.red}, ${current_member.color.green}, ${current_member.color.blue})`
             }
             final_chart_data.push(input_data);
-            final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y, stream_id: item.other_stream_id, stream_title: item.other_stream_title, viewer_count: item.other_stream_chatter_count});
+            final_chart_data[final_chart_data.length - 1].data.push({x: Date.parse(item.x), y: item.y, 
+                stream_id: item.other_stream_id, 
+                stream_title: item.other_stream_title, 
+                viewer_count: item.other_stream_chatter_count, 
+                viewer_percentage: parseInt(item.y) / parseInt(item.other_stream_chatter_count)});
         }
     }
     final_chart_data_sorted = [];
