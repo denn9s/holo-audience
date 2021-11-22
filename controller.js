@@ -60,13 +60,14 @@ async function getMember(req, res) {
     let stream_title = null;
     const member_name = member.name;
     const member_youtube_id = member.youtube_id;
+    const member_color = member.color;
     let all_streams = await Stream.find({member_id: member.id})
     // if stream_id is provided in route
     if (req.params.hasOwnProperty('stream_id')) {
         stream_id = req.params.stream_id;
         stream_title = all_streams.find(x => x.id === stream_id).title;
     }
-    res.render('member', { member_id, member_name, member_youtube_id, all_streams, stream_id, stream_title });
+    res.render('member', { member_id, member_name, member_youtube_id, member_color, all_streams, stream_id, stream_title });
 }
 
 /**
