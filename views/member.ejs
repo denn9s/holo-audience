@@ -224,6 +224,26 @@
             card.style.border = `3px solid ${style.getPropertyValue('--bs-info')}`;
         }
 
+        function togglePercentage() {
+            function swapKeys(obj, key1, key2) {
+                [obj[key1], obj[key2]] = [obj[key2], obj[key1]];
+            }
+            for (let member_data of common_chart.data.datasets) {
+                for (let point of member_data.data) {
+                    swapKeys(point, 'y', 'viewer_percentage');
+                }
+            }
+            if (document.getElementById('percentage_switch').checked) {
+                common_chart.options.scales.y.ticks.callback = function(value, index, values) {
+                    return (value * 100).toFixed(0) + '%'
+                }
+            } else {
+                common_chart.options.scales.y.ticks.callback = function(value, index, values) {
+                    return parseInt(value).toLocaleString('en-US');
+                }
+            }
+        }
+
         async function updateChart(stream_id) {
             if (most_recent_card_id !== '') {
                 clearBorder(most_recent_card_id);
@@ -244,6 +264,9 @@
                         common_chart.data.datasets[i].data = [];
                     }
                     common_chart.data.datasets = data;
+                    if (document.getElementById('percentage_switch').checked) {
+                        togglePercentage();
+                    }
                     common_chart.options.scales.x.ticks.display = true;
                     common_chart.options.scales.y.ticks.display = true;
                     common_chart.options.plugins.legend.display = true;
@@ -335,6 +358,11 @@
             });
             $('#stream_card_row').html(sortedDivs);
         });
+
+        $('#percentage_switch').change(function() {
+            togglePercentage();
+            common_chart.update();
+        })
     </script>
 </body>
 </html>
