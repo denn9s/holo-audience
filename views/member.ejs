@@ -190,7 +190,7 @@
                                 let count_array = []
                                 for (let point of ctx) {
                                     let dataset_index = point.dataIndex;
-                                    count_array.push(`Common Chatters: ${point.formattedValue}`);
+                                    count_array.push(`Common Chatters: ${point.formattedValue} (${(point.dataset.data[dataset_index].viewer_percentage * 100).toFixed(2)}%)`);
                                     count_array.push(`Total Chatters: ${(point.dataset.data[dataset_index].viewer_count).toLocaleString()}`)
                                 }
                                 return count_array
@@ -237,9 +237,27 @@
                 common_chart.options.scales.y.ticks.callback = function(value, index, values) {
                     return (value * 100).toFixed(0) + '%'
                 }
+                common_chart.options.plugins.tooltip.callbacks.footer = function(ctx) {
+                    let count_array = []
+                    for (let point of ctx) {
+                        let dataset_index = point.dataIndex;
+                        count_array.push(`Common Chatters Percentage: ${(point.formattedValue * 100).toFixed(2)}% (${point.dataset.data[dataset_index].viewer_percentage} viewers)`);
+                        count_array.push(`Total Chatters: ${(point.dataset.data[dataset_index].viewer_count).toLocaleString()}`)
+                    }
+                    return count_array
+                }
             } else {
                 common_chart.options.scales.y.ticks.callback = function(value, index, values) {
                     return parseInt(value).toLocaleString('en-US');
+                }
+                common_chart.options.plugins.tooltip.callbacks.footer = function(ctx) {
+                    let count_array = []
+                    for (let point of ctx) {
+                        let dataset_index = point.dataIndex;
+                        count_array.push(`Common Chatters: ${point.formattedValue} (${(point.dataset.data[dataset_index].viewer_percentage * 100).toFixed(2)}%)`);
+                        count_array.push(`Total Chatters: ${(point.dataset.data[dataset_index].viewer_count).toLocaleString()}`)
+                    }
+                    return count_array
                 }
             }
         }
