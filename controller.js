@@ -58,6 +58,7 @@ async function getMember(req, res) {
     }
     let stream_id = null;
     let stream_title = null;
+    let stream_date = null;
     const member_name = member.name;
     const member_youtube_id = member.youtube_id;
     const member_color = member.color;
@@ -65,9 +66,11 @@ async function getMember(req, res) {
     // if stream_id is provided in route
     if (req.params.hasOwnProperty('stream_id')) {
         stream_id = req.params.stream_id;
-        stream_title = all_streams.find(x => x.id === stream_id).title;
+        found_stream = all_streams.find(x => x.id === stream_id);
+        stream_title = found_stream.title;
+        stream_date = new Date(found_stream.times.actual_start_time).getTime();
     }
-    res.render('member', { member_id, member_name, member_youtube_id, member_color, all_streams, stream_id, stream_title });
+    res.render('member', { member_id, member_name, member_youtube_id, member_color, all_streams, stream_id, stream_title, stream_date });
 }
 
 /**
@@ -139,7 +142,8 @@ async function getChartData(req, res) {
     for (let item in final_chart_data) {
         final_chart_data[parseInt(item)].data.sort((a,b) => (a.x > b.x) ? 1 : ((b.x > a.x) ? -1 : 0))
     }
-    res.json(final_chart_data); 
+    let stream_date = new Date(stream.times.actual_start_time).getTime();
+    res.json({stream_date, final_chart_data}); 
 }
 
 /**
