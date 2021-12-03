@@ -4,6 +4,7 @@ const MemberSchema = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     youtube_id: { type: String, required: true, unique: true },
+    icon_link: { type: String },
     total_streams: { 
         type: Number,
         min: [0, 'No negative stream count!']
