@@ -74,7 +74,11 @@
                 member_card_row.classList.add('row', 'no-gutters');
                 // creating image column
                 const member_card_image = document.createElement('img');
-                member_card_image.src = 'https://i.imgur.com/z70J55x.png';
+                if (member.icon_link.length === 0) {
+                    member_card_image.src = 'https://i.imgur.com/z70J55x.png';
+                } else {
+                    member_card_image.src = member.icon_link;
+                }
                 member_card_image.classList.add('member-card-img');
                 const member_card_image_col = document.createElement('div');
                 member_card_image_col.classList.add('col-4', 'my-auto');

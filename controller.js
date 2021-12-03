@@ -37,7 +37,8 @@ mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mong
             group_data: {
                 group_name: member.group_data.group_name,
                 generation_name: member.group_data.generation_name
-            }
+            },
+            icon_link: member.icon_link
         }
         trimmed_member_array.push(trimmed_member);
     }

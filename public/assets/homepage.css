@@ -33,6 +33,8 @@ body {
 .member-card-img {
     border-radius: 50%;
     padding: 0.5rem;
+    height: 100px;
+    width: 100px;
 }
 
 .viewer-count-button {
