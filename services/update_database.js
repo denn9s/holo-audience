@@ -7,7 +7,7 @@ const Stream = require('../models/stream');
 const Chat = require('../models/chat');
 const Intersection = require('../models/intersection');
 
-const {getStreamDetails, getCredentials} = require('../stream_data');
+const {getStreamDetails, getCredentials} = require('../scripts/stream_data');
 const {getSurroundingStreams} = require('./update_helper');
 
 const credentials = getCredentials();
@@ -49,7 +49,7 @@ async function getAllStreams(member_id) {
     let member = await Member.findOne({id: member_id});
     return new Promise (async (resolve, reject) => {
         yt_id = member.youtube_id;
-        let pyshell = new PythonShell('get_stream_list.py', {mode: 'text', args: [yt_id]});
+        let pyshell = new PythonShell('scripts/get_stream_list.py', {mode: 'text', args: [yt_id]});
         pyshell.on('message', function (id) {
             stream_id_list.push(id);
         });
@@ -88,7 +88,7 @@ async function getNewStreams(member_id) {
     let member = await Member.findOne({id: member_id});
     return new Promise (async (resolve, reject) => {
         yt_id = member.youtube_id;
-        let pyshell = new PythonShell('get_stream_list_manual.py', {mode: 'text', args: [yt_id, file_name]});
+        let pyshell = new PythonShell('scripts/get_stream_list_manual.py', {mode: 'text', args: [yt_id, file_name]});
         pyshell.on('message', function (id) {
             stream_id_list.push(id);
         });
@@ -111,7 +111,7 @@ async function getNewStreams(member_id) {
     let chat_object = {}
     console.log(`Attempting to get chat for ID: ${stream_id}...`)
     return new Promise (async (resolve, reject) => {
-        let pyshell = new PythonShell('get_viewers.py', options);
+        let pyshell = new PythonShell('scripts/get_viewers.py', options);
         pyshell.on('message', function (res) {
             chat_object = res;
         });
@@ -251,7 +251,9 @@ async function updateAll(generation_id) {
     }
 }
 // runs at 23:59 PST everyday
-let daily_update_job = new CronJob('0 59 23 * * *', async function() {
-    await updateAll('');
-}, null, true, 'America/Los_Angeles');
-daily_update_job.start();
+// let daily_update_job = new CronJob('0 59 23 * * *', async function() {
+//     await updateAll('');
+// }, null, true, 'America/Los_Angeles');
+// daily_update_job.start();
+
+updateAll('');

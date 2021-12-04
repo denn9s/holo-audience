@@ -4,7 +4,7 @@ const Stream = require('../models/stream');
 const Chat = require('../models/chat');
 const Intersection = require('../models/intersection');
 
-const {getCredentials} = require('../stream_data');
+const {getCredentials} = require('../scripts/stream_data');
 const {getSurroundingStreams} = require('./update_helper');
 
 const credentials = getCredentials();

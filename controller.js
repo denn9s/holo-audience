@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {getCredentials} = require('./stream_data');
+const {getCredentials} = require('./scripts/stream_data');
 const credentials = getCredentials();
 
 const Member = require('./models/member');
