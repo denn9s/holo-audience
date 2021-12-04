@@ -1,6 +1,6 @@
 
-const Intersection = require('./models/intersection');
-const Stream = require('./models/stream');
+const Intersection = require('../models/intersection');
+const Stream = require('../models/stream');
 
 /**
  * 

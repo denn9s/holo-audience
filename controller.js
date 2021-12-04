@@ -6,7 +6,7 @@ const Member = require('./models/member');
 const Stream = require('./models/stream');
 const Intersection = require('./models/intersection');
 
-const {convertIntersectsToChartData, getSurroundingStreams} = require('./controller_helper');
+const {convertIntersectsToChartData, getSurroundingStreams} = require('./scripts/controller_helper');
 
 // mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mongo_password}@${credentials.mongo_database}?retryWrites=true&w=majority`)
