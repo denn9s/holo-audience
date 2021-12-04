@@ -14,10 +14,10 @@ const credentials = getCredentials();
 // mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mongo_password}@${credentials.mongo_database}?retryWrites=true&w=majority`)
     .then(() => {
-        console.log("Connection successful!");
+        console.log("MongoDB connection successful!");
     })
     .catch(err => {
-        console.log("Error! Connection unsuccessful!");
+        console.log("Error! MongoDB connection unsuccessful!");
         console.log(err);
     });
 
@@ -250,10 +250,9 @@ async function updateAll(generation_id) {
         await updateMemberStreamsAndChat(member_id);
     }
 }
-// runs at 23:59 PST everyday
-// let daily_update_job = new CronJob('0 59 23 * * *', async function() {
-//     await updateAll('');
-// }, null, true, 'America/Los_Angeles');
-// daily_update_job.start();
 
-updateAll('');
+// runs at 23:59 PST everyday
+let daily_update_job = new CronJob('0 59 23 * * *', async function() {
+    await updateAll('');
+}, null, true, 'America/Los_Angeles');
+daily_update_job.start();
