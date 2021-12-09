@@ -51,7 +51,13 @@
                         <label class="percentage-switch-label form-check-label" for="percentage_switch">%</label>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-auto my-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-info-circle float-end order-1" viewBox="0 0 16 16" style="-webkit-filter: invert(100%); filter: invert(100%);" data-bs-toggle="tooltip" data-bs-placement="left" title="Placeholder Tooltip">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                    </svg>
+                </div>
+                <div class="col-auto">
                     <div class="text-right dropdown show sort-dropdown float-end">
                         <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="sort_dropdown_button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By</button>
                         <div class="dropdown-menu">
@@ -234,6 +240,10 @@
     </script>
 
     <script>
+        // enabling Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl) });
+
         let most_recent_card_id = '';
         var style = getComputedStyle(document.body);
 
