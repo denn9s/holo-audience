@@ -1,5 +1,5 @@
 $.ajax({
-    url : 'http://127.0.0.1:3000/api/member/all/',
+    url : '/api/member/all/',
     type : 'GET',
     dataType:'json',
     success : function(data) {
