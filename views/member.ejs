@@ -310,7 +310,7 @@
             let viewer_count = $(`#button_${stream_id}`).attr('data-chatters');
             $(window).scrollTop(0);
             $.ajax({
-                url : `http://143.244.185.55/api/chart/<%=member_id%>/${stream_id}`,
+                url : `/api/chart/<%=member_id%>/${stream_id}`,
                 type : 'GET',
                 dataType:'json',
                 success : function(res) {
