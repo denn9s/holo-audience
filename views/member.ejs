@@ -378,7 +378,7 @@
                 let datasetIndex = point.datasetIndex;
                 var member_id = common_chart.data.datasets[datasetIndex].label;
                 var stream_id = common_chart.data.datasets[point.datasetIndex].data[point.index].stream_id;
-                window.location.href = `http://localhost:3000/${member_id}/${stream_id}`;
+                window.location.href = `/${member_id}/${stream_id}`;
             }
         };
     </script>
