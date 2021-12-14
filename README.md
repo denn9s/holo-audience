@@ -1,6 +1,6 @@
 # Holo Audience
 
-This repository contains the source code for [(link added later)](), minus a few private things.
+This repository contains the source code for [Holo (EN) Audience](https://audience.gwak.moe/), minus a few private things.
 
 ## Description
 
