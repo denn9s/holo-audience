@@ -188,13 +188,17 @@ async function addChatData(stream_id, member_id) {
  * @param {String} first_stream_id - YouTube video ID
  * @param {String} second_stream_id - YouTube video ID
  */
-async function addIntersection(first_stream_id, first_stream_member, second_stream_id, second_stream_member) {
-    let common_chatter_object = await Chat.aggregate([
-        {$match: {stream_id: {$in: [first_stream_id, second_stream_id]}}},
-        {$group: {_id: 0, chat1: {$first: "$chatters"}, chat2: {$last: "$chatters"}}},
-        {$project: {common_chatters: {$setIntersection: ["$chat1","$chat2"]}, _id: 0}}
-    ]);
-    let common_chatter_count = common_chatter_object[0].common_chatters.length;
+async function addIntersection(first_stream_id, first_stream_member, first_stream_count, second_stream_id, second_stream_member, second_stream_count) {
+    let common_chatter_count = first_stream_count;
+    for (let i = 0; i <= 5 || first_stream_count === common_chatter_count || second_stream_count === common_chatter_count; i++) {
+        if (common_chatter_count !== first_stream_count && common_chatter_count !== second_stream_count) { break; }
+        let common_chatter_object = await Chat.aggregate([
+            {$match: {stream_id: {$in: [first_stream_id, second_stream_id]}}},
+            {$group: {_id: 0, chat1: {$first: "$chatters"}, chat2: {$last: "$chatters"}}},
+            {$project: {common_chatters: {$setIntersection: ["$chat1","$chat2"]}, _id: 0}}
+        ]);
+        common_chatter_count = common_chatter_object[0].common_chatters.length;
+    }
     let possible_intersection = await Intersection.findOne({first_stream_id: second_stream_id, second_stream_id: first_stream_id});
     if (possible_intersection === null) {
         possible_intersection = await Intersection.findOne({first_stream_id: first_stream_id, second_stream_id: second_stream_id});
@@ -228,7 +232,7 @@ async function updateMemberStreamsAndChat(member_id) {
             if (stream_add_success === true) {
                 let other_stream_array = await getSurroundingStreams(member_id, stream_id, 7);
                 for (let stream of other_stream_array) {
-                    await addIntersection(stream_id, member_id, stream.id, stream.member_id);
+                    await addIntersection(stream_id, member_id, chat.chatter_count, stream.id, stream.member_id, stream.unique_viewer_count);
                 }
             }
         } else {
