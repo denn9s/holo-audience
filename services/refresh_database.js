@@ -1,15 +1,14 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 
 const Stream = require('../models/stream');
 const Chat = require('../models/chat');
 const Intersection = require('../models/intersection');
 
-const {getCredentials} = require('../scripts/stream_data');
 const {getSurroundingStreams} = require('./update_helper');
 
-const credentials = getCredentials();
-// mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mongo_password}@${credentials.mongo_database}?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}?retryWrites=true&w=majority`)
     .then(() => {
         console.log("Connection successful!");
     })

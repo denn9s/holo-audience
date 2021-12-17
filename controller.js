@@ -1,14 +1,11 @@
 const mongoose = require('mongoose');
-const {getCredentials} = require('./scripts/stream_data');
-const credentials = getCredentials();
 
 const Member = require('./models/member');
 const Stream = require('./models/stream');
 
 const {convertIntersectsToChartData, getSurroundingStreams} = require('./scripts/controller_helper');
 
-// mongoose.connect('mongodb://localhost:27017/holo', { useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.connect(`mongodb+srv://${credentials.mongo_username}:${credentials.mongo_password}@${credentials.mongo_database}?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}?retryWrites=true&w=majority`)
     .then(() => {
         console.log("MongoDB connection successful!");
     })

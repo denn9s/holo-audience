@@ -17,7 +17,7 @@ async function getMemberThumbnail(member_id) {
         params.append("part", part);
     }
     params.append("id", member_id);
-    params.append("key", getCredentials().api_key);
+    params.append("key", process.env.YT_API_KEY);
     var request = {
         params: params
     };
@@ -40,7 +40,7 @@ async function getStreamDetails(input_id) {
         params.append("part", part);
     }
     params.append("id", input_id);
-    params.append("key", getCredentials().api_key);
+    params.append("key", process.env.YT_API_KEY);
     var request = {
         params: params
     };
@@ -64,20 +64,5 @@ async function getStreamDetails(input_id) {
     }
 }
 
-/**
- * Retrieves credentials from local JSON file
- * @returns Object of credentials
- */
-function getCredentials() {
-    let data = fs.readFileSync('credentials.json');
-    let secret = JSON.parse(data);
-    const api_key = secret['api_key'];
-    const mongo_username = secret['mongo_username'];
-    const mongo_password = secret['mongo_password'];
-    const mongo_database = secret['mongo_database'];
-    return ({api_key: api_key, mongo_username: mongo_username, mongo_password: mongo_password, mongo_database: mongo_database});
-}
-
 module.exports.getMemberThumbnail = getMemberThumbnail;
 module.exports.getStreamDetails = getStreamDetails;
-module.exports.getCredentials = getCredentials;
