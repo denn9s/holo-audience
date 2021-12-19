@@ -17,6 +17,8 @@ This project is meant to visualize the amount of common viewers between differen
     * Express (4.17.1)
     * Mongoose (6.0.8)
     * [python-shell](https://www.npmjs.com/package/python-shell) (3.0.0)
+    * [cors](https://www.npmjs.com/package/cors) (2.8.5)
+    * [dotenv](https://www.npmjs.com/package/dotenv) (10.0.0)
 * Python (3.9.6)
     * Beautiful Soup (4.10.0)
     * [chat-downloader](https://github.com/xenova/chat-downloader) (0.1.10)
@@ -24,6 +26,7 @@ This project is meant to visualize the amount of common viewers between differen
 
 ### Front-end
 * [Chart.js](https://www.chartjs.org/) (3.5.1)
+    * [Chart.js Annotation](https://www.chartjs.org/chartjs-plugin-annotation/latest/) (1.1.0)
 * [Bootstrap](https://getbootstrap.com/) (5.1.3)
 * [jQuery](https://jquery.com/) (3.6.0)
 
